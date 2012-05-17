@@ -1,0 +1,155 @@
+.facebook-share-widget {
+  width: 300px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-smooth: always;
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
+  -o-font-smoothing: antialiased;
+  font-smoothing: antialiased;
+
+  input {
+    display: inline-block;
+    padding: 4px;
+    height: 18px;
+    color: #555;
+    background-color: #fff;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    font-weight: normal;
+    border: 1px solid #CCC;
+    outline: none;
+    @include border-radius(3px);
+    @include box-shadow(rgba(0, 0, 0, 0.075) 0 1px 1px 0 inset);
+    @include transition(border linear 0.2s, box-shadow linear 0.2s);
+    -webkit-transform-style: flat;
+    font-smooth: always;
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
+    -o-font-smoothing: antialiased;
+    font-smoothing: antialiased;
+    
+    &:focus {
+      border-color: rgba(82, 168, 236, 0.8);
+      outline: 0;
+      outline: thin dotted \9;
+      /* IE6-9 */
+      @include box-shadow(rgba(0, 0, 0, 0.075) 0 1px 1px 0 inset, rgba(82, 168, 236, 0.6) 0 0 8px 0);
+    }
+  }
+  
+  .name-search {
+    background-color: transparent;
+    @include border-top-left-radius(4px);
+    @include border-top-right-radius(4px);
+    //@include linear-gradient(#5181c5, 20%, #315d9b, 100%);
+    //@include linear-gradient(#f6f6f6, 20%, #eeeeee, 100%);
+    @include background(linear-gradient(#5181c5 20%, #315d9b 100%));
+    @include single-box-shadow(rgba(0, 0, 0, 0.25), 0, 1px, 3px, 0, false);
+    padding: 10px 20px;
+    
+    form {
+      display: inline-block;
+      width: 210px;
+      margin: 0 0 0 10px;
+      padding-right: 20px;
+    }
+    
+    img {
+      vertical-align: middle;
+    }
+    
+    input {
+      margin: 0;
+      padding: 4px 9px;
+      width: 100%;
+      vertical-align: middle;
+      @include border-radius(14px);
+      line-height: 14px;
+    }
+    
+    .search-text {
+      color: #666;
+      background-color: #fff;
+      border: 1px solid #ccc;
+    }
+  }
+  
+  .message-pane {
+    padding: 10px 20px;
+    background-color: #f0f0f0;
+    border-top: 1px solid #ffffff;
+    border-bottom: 1px solid #eeeeee;
+    @include single-box-shadow(rgba(0, 0, 0, 0.25), 0, 1px, 3px, 0, false);
+    
+    .message-wrapper {
+      padding-right: 10px;
+    }
+    
+    input {
+      margin: 0;
+      width: 100%;
+      line-height: 14px;
+    }
+  }
+
+  ul {
+    margin: 0;
+    padding: 0;
+    max-height: 220px;
+    overflow: scroll;
+    list-style-type: none;
+    @include border-bottom-left-radius(4px);
+    @include border-bottom-right-radius(4px);
+    @include single-box-shadow(rgba(0, 0, 0, 0.25), 0, 1px, 3px, 0, false);
+  }
+
+  li {
+    position: relative;
+    height: 50px;
+    padding: 10px 20px;
+    background-color: #f6f6f6;
+    border-top: 1px solid #ffffff;
+    border-bottom: 1px solid #eeeeee;
+    &:hover {
+      background-color: #f0f0f0;
+      .share-button { display: block; }
+    }
+    
+    .profile {
+      float: left;
+    }
+    
+    .name {
+      float: left;
+      margin: 15px 8px;
+      width: 150px;
+      color: #333;
+      font-size: 10pt;
+      line-height: 18px;
+    }
+    
+    .indicator {
+      float: right;
+      margin-top: 15px;
+    }
+
+    .share-button {
+      float: right;
+      display: none;
+      @include border-radius(5px);
+      @include background(linear-gradient(#5181c5 20%, #315d9b 100%));
+      //@include linear-gradient(#5181c5, 20%, #315d9b, 100%);
+      background-color: #315d9b;
+    	border-color: #7b9fd4 #5181c5 #315d9b;
+      color: #ffffff;
+      text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+      padding: 2px 6px;
+      margin-top: 12px;
+      font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+      font-size: 11px;
+      text-decoration: none;
+      line-height: 18px;
+      cursor: pointer;
+    }
+  }
+}

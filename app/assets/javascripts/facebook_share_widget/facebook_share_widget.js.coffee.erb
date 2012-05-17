@@ -1,0 +1,79 @@
+class @FacebookShareWidget
+  throttleRate: 250
+  
+  constructor: (@endpoint, @container, @friends, @options) ->
+    self = this
+    
+    $("ul", @container).html(friendsToListItems())
+    
+    rate = @throttleRate
+    $('input.search-text', @container).keydown(throttle(self, filter_list, rate))
+    
+    $("ul", @container).on "click", "a", ->
+      id = $(this).data("facebook-id").toString()
+      friend = friendWithId(id)
+      message = $('input.message', self.container).val()
+
+      indicator = $("<img class='indicator' src=\"<%= asset_path('facebook_share_widget/loader.gif') %>\" />").insertBefore($(this))
+      $(this).remove()
+      friend.status = "loading"
+
+      data = self.options ? {}
+      data.facebook_id = id
+      data.message = message
+
+      $.ajax
+        url: self.endpoint
+        type: "post"
+        data: { post: data }
+        success: (resp) ->
+          indicator.attr src: '<%= asset_path("facebook_share_widget/tick.png") %>'
+          friend.status = "loaded"
+        error: (jqXHR, textStatus, errorThrown) ->
+          json = eval("(#{jqXHR.responseText})")
+          console.debug(json)
+          indicator.attr src: '<%= asset_path("facebook_share_widget/cross.png") %>'
+          friend.status = null
+
+  friendWithId = (id) ->
+    for friend in @friends
+      return friend if friend.id == id
+
+  friendsToListItems = ->
+    html = ""
+    for friend in @friends
+      html += friendToListItem(friend)
+    html
+
+  friendToListItem = (item) ->
+    html = "<li>"
+    html += "<img class='profile' src='http://graph.facebook.com/#{item.id}/picture' />"
+    html += "<div class='name-wrapper'><span class='name'>#{item.name}</span></div>"
+    if item.status == "loading"
+      html += "<img class='indicator' src=\"<%= asset_path('facebook_share_widget/loader.gif') %>\" />"
+    else if item.status == "loaded"
+      html += "<img class='indicator' src=\"<%= asset_path('facebook_share_widget/tick.png') %>\" />"
+    else
+      html += "<a class='share-button' data-facebook-id='#{item.id}'>Share</a>"
+    html += '</li>'
+    
+  filter_list = ->
+    text = $('input.search-text', @container).val()
+    if text != undefined && text != null && text.length > 0
+      regex = new RegExp(text, "i")
+      html = ""
+      for friend in @friends
+        if regex.test(friend.name)
+          html += friendToListItem(friend)
+      $("ul", @container).html(html)
+    else
+      $("ul", @container).html(friendsToListItems())
+      
+  throttle = (context, fn, delay) ->
+    timer = null
+    ->
+      args = arguments
+      clearTimeout(timer)
+      callback = -> fn.apply(context, args)
+      timer = setTimeout(callback, delay)
+    

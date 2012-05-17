@@ -1,17 +1,28 @@
 class @FacebookShareWidget
   throttleRate: 250
+  friends: []
+  base_path: "<%= Rails.application.routes.named_routes[:facebook_share_widget].path.spec %>"
   
-  constructor: (@endpoint, @container, @friends, @options) ->
+  constructor: (@container, @options) ->
     self = this
-    
-    $("ul", @container).html(friendsToListItems())
-    
+
+    $.ajax
+      url: self.base_path + "/facebook/friends"
+      type: "get"
+      dataType: "json"
+      success: (resp) ->
+        self.friends = resp
+        $("ul", self.container).html(friendsToListItems.call(self))
+      error: (jqXHR, textStatus, errorThrown) ->
+        json = eval("(#{jqXHR.responseText})")
+        console.debug(json)
+        
     rate = @throttleRate
     $('input.search-text', @container).keydown(throttle(self, filter_list, rate))
     
     $("ul", @container).on "click", "a", ->
       id = $(this).data("facebook-id").toString()
-      friend = friendWithId(id)
+      friend = friendWithId.call(self, id)
       message = $('input.message', self.container).val()
 
       indicator = $("<img class='indicator' src=\"<%= asset_path('facebook_share_widget/loader.gif') %>\" />").insertBefore($(this))
@@ -23,7 +34,7 @@ class @FacebookShareWidget
       data.message = message
 
       $.ajax
-        url: self.endpoint
+        url: self.base_path + "/facebook/share"
         type: "post"
         data: { post: data }
         success: (resp) ->

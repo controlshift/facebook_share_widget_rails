@@ -1,5 +1,4 @@
 = render "widget"
   
 :javascript
-  friends = #{@friends.to_json(only: [:id, :name])}
-  new FacebookShareWidget('#{facebook_share_path}', $(".facebook-share-widget"), friends)
+  new FacebookShareWidget($(".facebook-share-widget"))

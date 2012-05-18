@@ -112,7 +112,6 @@
     border-bottom: 1px solid #eeeeee;
     &:hover {
       background-color: #f0f0f0;
-      .share-button { display: block; }
     }
     
     .profile {
@@ -135,7 +134,6 @@
 
     .share-button {
       float: right;
-      display: none;
       @include border-radius(5px);
       @include background(linear-gradient(#5181c5 20%, #315d9b 100%));
       //@include linear-gradient(#5181c5, 20%, #315d9b, 100%);

@@ -1,15 +1,13 @@
 $:.push File.expand_path("../lib", __FILE__)
 
-# Maintain your gem's version:
 require "facebook_share_widget/version"
 
-# Describe your gem and declare its dependencies:
 Gem::Specification.new do |s|
   s.name        = "facebook_share_widget"
   s.version     = FacebookShareWidget::VERSION
   s.authors     = ["Sean Ho"]
   s.email       = ["sean.ho@thoughtworks.com"]
-  s.homepage    = "TODO"
+  s.homepage    = "https://github.com/seanhotw/facebook_share_widget_rails"
   s.summary     = "Facebook Share Widget."
   s.description = "Facebook Share Widget."
 

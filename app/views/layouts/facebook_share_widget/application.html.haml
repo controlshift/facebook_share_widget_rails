@@ -1,0 +1,9 @@
+!!! 5
+%html
+  %head
+    %title Facebook Share Widget
+    = stylesheet_link_tag "facebook_share_widget/application", media: "all"
+    = javascript_include_tag "facebook_share_widget/application"
+    = csrf_meta_tags
+  %body
+    = yield

@@ -1,4 +1,4 @@
-class FacebookShareWidget::FacebookController < ::ApplicationController
+class FacebookShareWidget::FacebookController < FacebookShareWidget::ApplicationController
   include FacebookShareWidget::FacebookHelpers
   
   def index

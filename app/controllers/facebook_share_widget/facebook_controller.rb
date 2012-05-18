@@ -2,7 +2,6 @@ class FacebookShareWidget::FacebookController < ::ApplicationController
   include FacebookShareWidget::FacebookHelpers
   
   def index
-    session[:facebook_access_token] = "AAACEdEose0cBAEHBLOsU444koJmB1EFRWZBZA0AuXZA8pDdxwXAhk7oRXWKWkdkkZBiC98HSdmSVse8ZAVXXZAVqkc21sOouTnBCauNVKDqAZDZD"
   end
   
   def friends

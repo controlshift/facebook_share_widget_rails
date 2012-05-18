@@ -78,7 +78,7 @@ class @FacebookShareWidget
           html += friendToListItem(friend)
       $("ul", @container).html(html)
     else
-      $("ul", @container).html(friendsToListItems())
+      $("ul", @container).html(friendsToListItems.call(this))
       
   throttle = (context, fn, delay) ->
     timer = null

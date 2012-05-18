@@ -1,4 +1,5 @@
-= render "widget"
+- if session[:facebook_access_token].present?
+  = render "widget"
   
-:javascript
-  new FacebookShareWidget($(".facebook-share-widget"))
+  :javascript
+    new FacebookShareWidget($(".facebook-share-widget"))

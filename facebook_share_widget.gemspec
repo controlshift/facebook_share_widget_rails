@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.summary     = "Facebook Share Widget."
   s.description = "Facebook Share Widget."
 
-  s.files = Dir["{app,config,db,lib}/**/*"] + ["LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{app,config,db,lib}/**/*"] + ["LICENSE", "Rakefile", "README.md"]
 
   s.add_dependency "fb_graph"
   s.add_dependency "haml-rails"

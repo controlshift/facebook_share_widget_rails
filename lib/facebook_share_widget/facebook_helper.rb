@@ -1,11 +1,13 @@
 module FacebookShareWidget
-  module FacebookHelpers
+  module FacebookHelper
     def facebook_access_token
-      session[:facebook_access_token]
-    end
-  
-    def has_facebook_access
-      session[:facebook_access_token].present?
+      if FacebookShareWidget.access_token_session_key && session[FacebookShareWidget.access_token_session_key]
+        session[FacebookShareWidget.access_token_session_key]
+      else
+        auth = FbGraph::Auth.new(FacebookShareWidget.client_id, FacebookShareWidget.client_secret)
+        auth.from_cookie(cookies)
+        auth.access_token
+      end
     end
   
     def facebook_me

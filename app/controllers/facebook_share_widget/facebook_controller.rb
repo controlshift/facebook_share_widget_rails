@@ -1,5 +1,5 @@
 class FacebookShareWidget::FacebookController < FacebookShareWidget::ApplicationController
-  include FacebookShareWidget::FacebookHelpers
+  include FacebookShareWidget::FacebookHelper
   
   def index
   end

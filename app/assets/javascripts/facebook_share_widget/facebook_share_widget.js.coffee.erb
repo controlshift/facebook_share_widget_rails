@@ -1,10 +1,11 @@
 class @FacebookShareWidget
   throttleRate: 250
   friends: []
-  base_path: "<%= Rails.application.routes.named_routes[:facebook_share_widget].path.spec %>"
+  base_path: ""
   
   constructor: (@container, @options) ->
     self = this
+    self.base_path = @options.base_path
 
     $.ajax
       url: self.base_path + "/facebook/friends"

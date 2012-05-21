@@ -11,4 +11,7 @@
   %ul
   
 :javascript
-  new FacebookShareWidget($(".facebook-share-widget"))
+  jQuery(function() {
+    new FacebookShareWidget($(".facebook-share-widget"), 
+                            { base_path: "#{ Rails.application.routes.named_routes[:facebook_share_widget].path.spec}" });
+  });           

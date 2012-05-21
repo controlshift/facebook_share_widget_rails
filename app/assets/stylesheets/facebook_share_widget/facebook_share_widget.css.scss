@@ -41,30 +41,22 @@
     background-color: transparent;
     @include border-top-left-radius(4px);
     @include border-top-right-radius(4px);
-    //@include linear-gradient(#5181c5, 20%, #315d9b, 100%);
-    //@include linear-gradient(#f6f6f6, 20%, #eeeeee, 100%);
     @include background(linear-gradient(#5181c5 20%, #315d9b 100%));
+    background-color: #315d9b;
     @include single-box-shadow(rgba(0, 0, 0, 0.25), 0, 1px, 3px, 0, false);
     padding: 10px 20px;
-    
-    form {
-      display: inline-block;
-      width: 210px;
-      margin: 0 0 0 10px;
-      padding-right: 20px;
-    }
     
     img {
       vertical-align: middle;
     }
     
-    input {
-      margin: 0;
+    input.search-text {
+      margin: 0 0 0 10px;
       padding: 4px 9px;
-      width: 100%;
-      vertical-align: middle;
+      width: 210px;
       @include border-radius(14px);
       line-height: 14px;
+      vertical-align: middle;
     }
     
     .search-text {
@@ -93,10 +85,11 @@
   }
 
   ul {
+    position: relative;
     margin: 0;
     padding: 0;
     max-height: 250px;
-    overflow: scroll;
+    overflow: auto;
     list-style-type: none;
     @include border-bottom-left-radius(4px);
     @include border-bottom-right-radius(4px);
@@ -115,34 +108,38 @@
     }
     
     .profile {
-      float: left;
+      position: absolute;
+      top: 10;
+      left: 20;
     }
     
     .name {
-      float: left;
-      margin: 15px 8px;
-      width: 150px;
+      position: absolute;
+      top: 26px;
+      left: 80px;
+      width: 130px;
       color: #333;
       font-size: 10pt;
       line-height: 18px;
     }
     
     .indicator {
-      float: right;
-      margin-top: 15px;
+      position: absolute;
+      top: 26px;
+      right: 20px;
     }
 
     .share-button {
-      float: right;
+      position: absolute;
+      top: 24px;
+      right: 20px;
       @include border-radius(5px);
       @include background(linear-gradient(#5181c5 20%, #315d9b 100%));
-      //@include linear-gradient(#5181c5, 20%, #315d9b, 100%);
       background-color: #315d9b;
     	border-color: #7b9fd4 #5181c5 #315d9b;
       color: #ffffff;
       text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
       padding: 2px 6px;
-      margin-top: 12px;
       font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
       font-size: 11px;
       text-decoration: none;

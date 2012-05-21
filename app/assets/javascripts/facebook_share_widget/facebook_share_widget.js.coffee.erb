@@ -16,7 +16,7 @@ class @FacebookShareWidget
         $("ul", self.container).html(friendsToListItems.call(self))
       error: (jqXHR, textStatus, errorThrown) ->
         json = eval("(#{jqXHR.responseText})")
-        console.debug(json)
+        #console.debug(json)
         
     rate = @throttleRate
     $('input.search-text', @container).keydown(throttle(self, filter_list, rate))
@@ -43,7 +43,7 @@ class @FacebookShareWidget
           friend.status = "loaded"
         error: (jqXHR, textStatus, errorThrown) ->
           json = eval("(#{jqXHR.responseText})")
-          console.debug(json)
+          #console.debug(json)
           indicator.attr src: '<%= asset_path("facebook_share_widget/cross.png") %>'
           friend.status = null
 
@@ -60,7 +60,7 @@ class @FacebookShareWidget
   friendToListItem = (item) ->
     html = "<li>"
     html += "<img class='profile' src='http://graph.facebook.com/#{item.id}/picture' />"
-    html += "<div class='name-wrapper'><span class='name'>#{item.name}</span></div>"
+    html += "<span class='name'>#{item.name}</span>"
     if item.status == "loading"
       html += "<img class='indicator' src=\"<%= asset_path('facebook_share_widget/loader.gif') %>\" />"
     else if item.status == "loaded"

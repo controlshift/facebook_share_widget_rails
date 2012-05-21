@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    facebook_share_widget (0.0.3)
+    facebook_share_widget (0.0.5)
       coffee-rails
       compass-rails
       fb_graph

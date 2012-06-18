@@ -3,9 +3,9 @@
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-smooth: always;
   -webkit-font-smoothing: antialiased;
-  -moz-font-smoothing: antialiased;
-  -o-font-smoothing: antialiased;
-  font-smoothing: antialiased;
+     -moz-font-smoothing: antialiased;
+       -o-font-smoothing: antialiased;
+          font-smoothing: antialiased;
 
   input, textarea {
     display: inline-block;
@@ -24,9 +24,9 @@
     -webkit-transform-style: flat;
     font-smooth: always;
     -webkit-font-smoothing: antialiased;
-    -moz-font-smoothing: antialiased;
-    -o-font-smoothing: antialiased;
-    font-smoothing: antialiased;
+       -moz-font-smoothing: antialiased;
+         -o-font-smoothing: antialiased;
+            font-smoothing: antialiased;
     
     &:focus {
       border-color: rgba(82, 168, 236, 0.8);
@@ -41,7 +41,7 @@
     background-color: transparent;
     @include border-top-left-radius(4px);
     @include border-top-right-radius(4px);
-    @include background(linear-gradient(#5181c5 20%, #315d9b 100%));
+    @include background-image(linear-gradient(#5181c5 20%, #315d9b 100%));
     background-color: #315d9b;
     @include single-box-shadow(rgba(0, 0, 0, 0.25), 0, 1px, 3px, 0, false);
     padding: 10px 20px;
@@ -101,15 +101,15 @@
   li {
     position: relative;
     height: 50px;
-    width: 260px;
+    width: 250px;
     float: left;
     padding: 10px 20px;
     background-color: #f6f6f6;
-    border-top: 1px solid #ffffff;
-    border-bottom: 1px solid #eeeeee;
-    &:hover {
-      background-color: #f0f0f0;
-    }
+    //border-top: 1px solid #ffffff;
+    //border-bottom: 1px solid #eeeeee;
+    // &:hover {
+    //   background-color: #f0f0f0;
+    // }
     
     .profile {
       position: absolute;
@@ -138,8 +138,7 @@
       top: 34px;
       left: 80px;
       @include border-radius(5px);
-      @include background(linear-gradient(#5181c5 20%, #315d9b 100%));
-      background-color: #315d9b;
+      @include background-image(linear-gradient(#5181c5 20%, #315d9b 100%));
       border-color: #7b9fd4 #5181c5 #315d9b;
       color: #ffffff;
       text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
@@ -151,6 +150,10 @@
       text-transform: uppercase;
       line-height: 18px;
       cursor: pointer;
+      
+      &:hover {
+        @include background-image(linear-gradient(#5181c5 5%, #315d9b 60%));
+      }
     }
   }
 }

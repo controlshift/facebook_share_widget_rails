@@ -1,3 +1,5 @@
+root = exports ? this
+
 class @FacebookShareWidget
   throttleRate: 250
   friends: []
@@ -24,7 +26,7 @@ class @FacebookShareWidget
     $("ul", @container).on "click", "a", ->
       id = $(this).data("facebook-id").toString()
       friend = friendWithId.call(self, id)
-      message = $('input.message', self.container).val()
+      message = $('textarea.message', self.container).val()
 
       indicator = $("<img class='indicator' src=\"<%= asset_path('facebook_share_widget/loader.gif') %>\" />").insertBefore($(this))
       $(this).remove()
@@ -41,11 +43,13 @@ class @FacebookShareWidget
         success: (resp) ->
           indicator.attr src: '<%= asset_path("facebook_share_widget/tick.png") %>'
           friend.status = "loaded"
+          root.facebookShareWidget.callbacks.success(friend)
         error: (jqXHR, textStatus, errorThrown) ->
           json = eval("(#{jqXHR.responseText})")
           #console.debug(json)
           indicator.attr src: '<%= asset_path("facebook_share_widget/cross.png") %>'
           friend.status = null
+          root.facebookShareWidget.callbacks.fail(friend)
 
   friendWithId = (id) ->
     for friend in @friends
@@ -88,4 +92,9 @@ class @FacebookShareWidget
       clearTimeout(timer)
       callback = -> fn.apply(context, args)
       timer = setTimeout(callback, delay)
+    
+root.facebookShareWidget =
+  callbacks:
+    success: (friend) ->
+    fail: (friend) ->
     

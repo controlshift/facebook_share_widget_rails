@@ -127,10 +127,20 @@
       line-height: 18px;
     }
     
+    .error-message {
+      position: absolute;
+      top: 34px;
+      left: 100px;
+      width: 180px;
+      color: #B94A48;
+      font-size: 8pt;
+      line-height: 18px;
+    }
+    
     .indicator {
       position: absolute;
-      top: 26px;
-      right: 20px;
+      top: 36px;
+      left: 80px;
     }
 
     .share-button {

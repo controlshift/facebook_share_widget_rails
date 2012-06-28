@@ -15,6 +15,7 @@ class FacebookShareWidget::FacebookController < FacebookShareWidget::Application
   def share
     begin
       post(params[:post])
+      FacebookShareWidget::Share.create(user_facebook_id: facebook_me.identifier, friend_facebook_id: params[:post][:facebook_id], url: params[:post][:link], message: params[:post][:message])
       render json: {}, status: :ok
     rescue Exception => ex
       log_exception_and_render_as_json(ex)

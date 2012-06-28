@@ -32,13 +32,20 @@ describe FacebookShareWidget::FacebookController do
   end
   
   describe "#share" do
-    it "should share post to facebook" do
-      post_attrs = { "message" => "hi" }
-      controller.should_receive(:post).with(post_attrs)
+    context "successful post" do
+      before(:each) do
+        post_attrs = { "message" => "hi", 'facebook_id' => '1', 'link' => 'http://www.communityrun.org/' }
+        controller.should_receive(:post).with(post_attrs)
+        me = mock()
+        me.should_receive(:identifier).and_return(1)
+        controller.should_receive(:facebook_me).and_return(me)
+
+        post :share, post: post_attrs     
+      end
+
       
-      post :share, post: post_attrs
-      
-      response.should be_successful
+      specify { response.should be_successful }
+      specify { FacebookShareWidget::Share.count }
     end
     
     it "should return error message on fail" do

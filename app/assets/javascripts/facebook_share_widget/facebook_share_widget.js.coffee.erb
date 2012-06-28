@@ -4,10 +4,12 @@ class @FacebookShareWidget
   throttleRate: 250
   friends: []
   base_path: ""
+  template: {}
   
   constructor: (@container, @options) ->
     self = this
     self.base_path = @options.base_path
+    self.template = @options.template if @options.template?
 
     $.ajax
       url: self.base_path + "/facebook/friends"
@@ -33,7 +35,7 @@ class @FacebookShareWidget
       $(this).remove()
       friend.status = "loading"
 
-      data = self.options ? {}
+      data = $.extend({}, self.template)
       data.facebook_id = id
       data.message = message
 

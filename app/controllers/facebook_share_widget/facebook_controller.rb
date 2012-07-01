@@ -6,7 +6,7 @@ class FacebookShareWidget::FacebookController < FacebookShareWidget::Application
   
   def friends
     begin
-      render json: facebook_friends, status: :ok
+      render json: facebook_friends_for_link(params[:link]), status: :ok
     rescue Exception => ex
       log_exception_and_render_as_json(ex)
     end
@@ -14,8 +14,11 @@ class FacebookShareWidget::FacebookController < FacebookShareWidget::Application
   
   def share
     begin
+      me = facebook_me.fetch
       post(params[:post])
-      FacebookShareWidget::Share.create(user_facebook_id: facebook_me.identifier, friend_facebook_id: params[:post][:facebook_id], url: params[:post][:link], message: params[:post][:message])
+      share = FacebookShareWidget::Share.new(user_facebook_id: me.identifier, friend_facebook_id: params[:post][:facebook_id], url: params[:post][:link], message: params[:post][:message])
+      share.save!
+        
       render json: {}, status: :ok
     rescue Exception => ex
       log_exception_and_render_as_json(ex)

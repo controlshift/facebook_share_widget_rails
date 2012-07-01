@@ -19,14 +19,32 @@ module FacebookShareWidget
     end
   
     def facebook_friends
-      friends = []
-      friends += facebook_me.friends.map {|f| { id: f.identifier, name: f.name } }
+      friends = {}
+      facebook_me.friends.each do|f|
+        friends[f.identifier] = { id: f.identifier, name: f.name }
+      end
+      friends
+    end
+    
+    def facebook_friends_for_link(url)
+      friends = append_shares_loaded(facebook_friends, url)      
+      friends.collect {|key, value| value }
+    end
+    
+    def append_shares_loaded(friends, url)
+      me = facebook_me.fetch
+      friends
+      shares = FacebookShareWidget::Share.all conditions: {url: url, user_facebook_id: "#{me.identifier}"}
+      shares.each do | share |
+        friends[share.friend_facebook_id] = friends[share.friend_facebook_id].merge({:status => 'loaded'}) if friends[share.friend_facebook_id]
+      end
       friends
     end
   
     def post(post = {})
-      facebook_id = post.delete(:facebook_id)
-      facebook_user(facebook_id).feed!(post)
+      p = post.dup #fix pass by reference bug.
+      facebook_id = p.delete(:facebook_id)
+      facebook_user(facebook_id).feed!(p)
     end
   end
 end

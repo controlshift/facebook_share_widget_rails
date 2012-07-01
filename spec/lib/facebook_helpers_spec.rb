@@ -41,6 +41,33 @@ describe FacebookShareWidget::FacebookHelper do
       subject.stub(:facebook_access_token) { @token }
     end
     
+    describe "#facebook_friends_for_link" do
+      
+      before(:each) do
+        FacebookShareWidget::Share.create!(friend_facebook_id: 1, user_facebook_id: 2, url: 'http://www.google.com/' )
+      end
+      
+      it "should get the friends" do
+        raw_friends = [OpenStruct.new({ identifier: "1", name: "name" })]        
+        subject.should_receive(:facebook_friends).and_return(raw_friends)
+        subject.should_receive(:append_shares_loaded).with(raw_friends, 'http://www.google.com/').and_return(raw_friends)
+        
+        subject.facebook_friends_for_link('http://www.google.com/')
+      end
+      
+      it "should append the status" do
+        me = mock()
+        me.should_receive(:fetch).and_return(me)
+        me.should_receive(:identifier).and_return(2)
+        
+        FbGraph::User.should_receive(:me).with(@token) { me }
+        friends = {"1" => { id: "1", name: "name" }, "2" => { id: "2", name: "name2" }}
+
+        with_appends = subject.append_shares_loaded(friends, 'http://www.google.com/')
+        with_appends.should == { "1" => { status: 'loaded', id: "1", name: "name" }, "2" => { id: "2", name: "name2" }}
+      end
+    end
+    
     describe "#facebook_me" do
       it "should get facebook me object" do
         me = mock
@@ -64,7 +91,7 @@ describe FacebookShareWidget::FacebookHelper do
         me.stub(:friends) { raw_friends }
         subject.stub(:facebook_me) { me }
         
-        subject.facebook_friends.should == [{ id: "1", name: "name" }]
+        subject.facebook_friends.should == {"1" => { id: "1", name: "name" }}
       end
     end
     

@@ -19,11 +19,13 @@ module FacebookShareWidget
     end
   
     def facebook_friends
-      friends = {}
-      facebook_me.friends.each do|f|
-        friends[f.identifier] = { id: f.identifier, name: f.name }
+      Rails.cache.fetch("friends_for_#{self.facebook_access_token}", :expires_in => 1.hour) do
+        friends = {}
+        facebook_me.friends.each do|f|
+          friends[f.identifier] = { id: f.identifier, name: f.name }
+        end
+        friends
       end
-      friends
     end
     
     def facebook_friends_for_link(url)

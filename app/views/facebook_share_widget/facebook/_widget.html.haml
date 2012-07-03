@@ -13,9 +13,13 @@
   
 :javascript
   $(function() {
-    new FacebookShareWidget($(".facebook-share-widget"), 
-                            {
-                              base_path: "#{ Rails.application.routes.named_routes[:facebook_share_widget].path.spec}", 
-                              template: #{ options[:template].to_json }
-                            });
+    initialize_facebook_widget();
   });
+  
+  function initialize_facebook_widget(){
+    new FacebookShareWidget($(".facebook-share-widget"), 
+                          {
+                            base_path: "#{ Rails.application.routes.named_routes[:facebook_share_widget].path.spec}", 
+                            template: #{ options[:template].to_json }
+                          });
+  }

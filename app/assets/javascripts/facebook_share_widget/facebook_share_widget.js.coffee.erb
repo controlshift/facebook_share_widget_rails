@@ -31,14 +31,15 @@ class @FacebookShareWidget
       this.filter_list()
       #throttle(self, this.filter_list, this.throttleRate)
     
-    $("ul", @container).on "click", "a", ->
-      id = $(this).data("facebook-id").toString()
+    $("ul", @container).on "click", "a", (event) =>
+      link = $(event.target)
+      id = link.data("facebook-id").toString()
       friend = this.friendWithId(id)
       message = $('textarea.message', @container).val()
 
-      errorMessage = $(this).siblings(".error-message")
-      indicator = $("<img class='indicator' src=\"<%= asset_path('facebook_share_widget/loader.gif') %>\" />").insertBefore($(this))
-      $(this).remove()
+      errorMessage = link.siblings(".error-message")
+      indicator = $("<img class='indicator' src=\"<%= asset_path('facebook_share_widget/loader.gif') %>\" />").insertBefore(link)
+      link.remove()
       friend.status = "loading"
 
       data = $.extend({}, @template)
@@ -49,11 +50,11 @@ class @FacebookShareWidget
         url: @base_path + "/facebook/share"
         type: "post"
         data: { post: data }
-        success: (resp) ->
+        success: (resp) =>
           indicator.attr src: '<%= asset_path("facebook_share_widget/tick.png") %>'
           friend.status = "loaded"
           @callbacks.success(friend)
-        error: (jqXHR, textStatus, errorThrown) ->
+        error: (jqXHR, textStatus, errorThrown) =>
           json = $.parseJSON(jqXHR.responseText)
           indicator.attr src: '<%= asset_path("facebook_share_widget/cross.png") %>'
           errorMessage.text(json.message)

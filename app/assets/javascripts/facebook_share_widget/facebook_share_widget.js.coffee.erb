@@ -7,65 +7,70 @@ class @FacebookShareWidget
   template: {}
   
   constructor: (@container, @options) ->
-    self = this
-    self.base_path = @options.base_path
-    self.template = @options.template if @options.template?
+    @base_path = @options.base_path
+    @template = @options.template if @options.template?
+    @callbacks = {
+      success: @options.callbacks && options.callbacks.success ? facebookShareWidget.callbacks.success
+      fail:    @options.callbacks && options.callbacks.fail  ? facebookShareWidget.callbacks.fail
+    }
 
     $.ajax
-      url: self.base_path + "/facebook/friends"
+      url: @base_path + "/facebook/friends"
       type: "get"
       dataType: "json"
-      data:  $.extend({}, self.template)
+      data:  $.extend({}, @template)
 
-      success: (resp) ->
-        self.friends = resp
-        $("ul", self.container).html(friendsToListItems.call(self))
+      success: (resp) =>
+        @friends = resp
+        $("ul", @container).html(this.friendsToListItems())
       error: (jqXHR, textStatus, errorThrown) ->
         json = $.parseJSON(jqXHR.responseText)
-                
-    rate = @throttleRate
-    $('input.search-text', @container).keydown(throttle(self, filter_list, rate))
+        console.debug(json.message)
+
+    $('input.search-text', @container).keydown (event) =>
+      this.filter_list()
+      #throttle(self, this.filter_list, this.throttleRate)
     
     $("ul", @container).on "click", "a", ->
       id = $(this).data("facebook-id").toString()
-      friend = friendWithId.call(self, id)
-      message = $('textarea.message', self.container).val()
+      friend = this.friendWithId(id)
+      message = $('textarea.message', @container).val()
 
       errorMessage = $(this).siblings(".error-message")
       indicator = $("<img class='indicator' src=\"<%= asset_path('facebook_share_widget/loader.gif') %>\" />").insertBefore($(this))
       $(this).remove()
       friend.status = "loading"
 
-      data = $.extend({}, self.template)
+      data = $.extend({}, @template)
       data.facebook_id = id
       data.message = message
 
       $.ajax
-        url: self.base_path + "/facebook/share"
+        url: @base_path + "/facebook/share"
         type: "post"
         data: { post: data }
         success: (resp) ->
           indicator.attr src: '<%= asset_path("facebook_share_widget/tick.png") %>'
           friend.status = "loaded"
-          root.facebookShareWidget.callbacks.success(friend)
+          @callbacks.success(friend)
         error: (jqXHR, textStatus, errorThrown) ->
           json = $.parseJSON(jqXHR.responseText)
           indicator.attr src: '<%= asset_path("facebook_share_widget/cross.png") %>'
           errorMessage.text(json.message)
           friend.status = null
-          root.facebookShareWidget.callbacks.fail(friend)
+          @callbacks.fail(friend)
 
-  friendWithId = (id) ->
+  friendWithId: (id) ->
     for friend in @friends
       return friend if friend.id == id
 
-  friendsToListItems = ->
+  friendsToListItems: ->
     html = ""
     for friend in @friends
-      html += friendToListItem(friend)
+      html += this.friendToListItem(friend)
     html
 
-  friendToListItem = (item) ->
+  friendToListItem: (item) ->
     html = "<li>"
     html += "<img class='profile' src='http://graph.facebook.com/#{item.id}/picture' />"
     html += "<span class='name'>#{item.name}</span>"
@@ -78,28 +83,28 @@ class @FacebookShareWidget
       html += "<a class='share-button' data-facebook-id='#{item.id}'>Share</a>"
     html += '</li>'
     
-  filter_list = ->
-    text = $('  input.search-text', @container).val()
-    if text != undefined && text != null && text.length > 0
+  filter_list: =>
+    text = $('input.search-text', @container).val()
+    if !!text
       regex = new RegExp(text, "i")
       html = ""
       for friend in @friends
         if regex.test(friend.name)
-          html += friendToListItem(friend)
+          html += this.friendToListItem(friend)
       $("ul", @container).html(html)
     else
-      $("ul", @container).html(friendsToListItems.call(this))
+      $("ul", @container).html(this.friendsToListItems())
       
-  throttle = (context, fn, delay) ->
-    timer = null
-    ->
-      args = arguments
-      clearTimeout(timer)
-      callback = -> fn.apply(context, args)
-      timer = setTimeout(callback, delay)
-    
+#  throttle: (context, fn, delay) ->
+#    alert('foo')
+#    timer = null
+#    ->
+#      args = arguments
+#      clearTimeout(timer)
+#      callback = -> fn.apply(context, args)
+#      timer = setTimeout(callback, delay)
+
 root.facebookShareWidget =
   callbacks:
     success: (friend) ->
     fail: (friend) ->
-    

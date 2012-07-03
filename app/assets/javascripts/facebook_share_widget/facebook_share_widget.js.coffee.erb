@@ -21,9 +21,8 @@ class @FacebookShareWidget
         self.friends = resp
         $("ul", self.container).html(friendsToListItems.call(self))
       error: (jqXHR, textStatus, errorThrown) ->
-        json = eval("(#{jqXHR.responseText})")
-        #console.debug(json)
-        
+        json = $.parseJSON(jqXHR.responseText)
+                
     rate = @throttleRate
     $('input.search-text', @container).keydown(throttle(self, filter_list, rate))
     
@@ -50,8 +49,7 @@ class @FacebookShareWidget
           friend.status = "loaded"
           root.facebookShareWidget.callbacks.success(friend)
         error: (jqXHR, textStatus, errorThrown) ->
-          json = eval("(#{jqXHR.responseText})")
-          #console.debug(json)
+          json = $.parseJSON(jqXHR.responseText)
           indicator.attr src: '<%= asset_path("facebook_share_widget/cross.png") %>'
           errorMessage.text(json.message)
           friend.status = null

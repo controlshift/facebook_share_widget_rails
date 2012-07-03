@@ -12,7 +12,7 @@
       = image_tag 'facebook_share_widget/loader.gif'
   
 :javascript
-  $(function() {
+  $(document).on('ready pjax:success', function(){
     initialize_facebook_widget();
   });
   

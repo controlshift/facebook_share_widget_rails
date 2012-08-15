@@ -29,7 +29,7 @@ module FacebookShareWidget
     end
     
     def facebook_friends_for_link(url)
-      friends = append_shares_loaded(facebook_friends, url)      
+      friends = append_shares_loaded(facebook_friends, url)
       friends.collect {|key, value| value }
     end
     

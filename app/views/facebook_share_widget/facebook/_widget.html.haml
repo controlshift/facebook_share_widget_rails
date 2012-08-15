@@ -6,21 +6,8 @@
   .message-pane
     .message-wrapper
       %textarea.message{ placeholder: "Message to your friend" }
-      
-  %ul
-    %li
-      = image_tag 'facebook_share_widget/loader.gif'
 
-#container
-  
-:javascript
-  $(document).on('ready pjax:end', function(){
-
-      new FacebookShareWidget($(".facebook-share-widget"),
-                            {
-                              base_path: "#{ Rails.application.routes.named_routes[:facebook_share_widget].path.spec}",
-                              template: #{ options[:template].to_json }
-                            });
-  });
+  #container
+    = image_tag 'facebook_share_widget/loader.gif'
 
 

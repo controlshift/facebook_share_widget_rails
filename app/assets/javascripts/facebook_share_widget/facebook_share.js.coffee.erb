@@ -1,0 +1,109 @@
+#= require underscore.js
+#= require backbone.js
+#= require handlebars-runtime.js
+
+$ ->
+  class FacebookFriend extends Backbone.Model
+    url: '/widget/facebook/share'
+
+    isShared: ->
+      @get('status') == 'shared'
+
+    shared: ->
+      @set('status': 'shared')
+
+    isSharing: ->
+      @get('status') == 'sharing'
+
+    startSharing: ->
+      @set('status': 'sharing')
+
+    shareFailedBecause: (reason)->
+      @set('status': 'failed', 'reason': reason)
+
+    isShareFailed: ->
+      @get('status') == 'failed'
+
+    share: (message, template) ->
+      friend = this
+      data = $.extend({}, $.parseJSON(template))
+      data.facebook_id = @id
+      data.message = message
+      @startSharing()
+      $.ajax
+          url: @url
+          type: "post"
+          data: { post: data }
+          success: (resp) =>
+              friend.shared()
+          error: (jqXHR, textStatus, errorThrown) =>
+              json = $.parseJSON(jqXHR.responseText)
+              friend.shareFailedBecause(json.message)
+
+  class FacebookFriends extends Backbone.Collection
+    url: '/widget/facebook/friends'
+    model: FacebookFriend
+
+  class FacebookFriendView extends Backbone.View
+    tagName: 'li'
+    events:
+      'click.share-button': 'shareToFriend'
+
+    initialize: ->
+      @model.on('change', @render, this)
+
+    render: ->
+      friend = @model.toJSON()
+      $(@el).html(HandlebarsTemplates['facebook_share_widget/templates/friend'](friend))
+      if @model.isShared()
+        @renderShared()
+      else if @model.isSharing()
+        @renderSharing()
+      else if @model.isShareFailed()
+        @renderFailed(friend)
+      else
+        @renderToShare(friend)
+      this
+
+    renderShared: ->
+      $(@el).append("<div class='indicator'><img src='<%= asset_path("facebook_share_widget/tick.png") %>'/> Shared</div>")
+      this
+
+    renderSharing: ->
+      $(@el).append("<div class='indicator'><img src='<%= asset_path("facebook_share_widget/loader.gif") %>'/> Sharing</div>")
+      this
+
+    renderToShare: (friend) ->
+      $(@el).append("<a class='share-button' data-facebook-id='#{friend.id}'>Share</a>")
+      this
+
+    renderFailed: (friend) ->
+      $(@el).children('.error-message').text(friend.reason)
+      this
+
+    shareToFriend: (event) ->
+      event.preventDefault()
+      @model.share(@sharingMessage(),@sharingTemplate())
+
+    sharingMessage: ->
+      $('textarea.message').val()
+
+    sharingTemplate: ->
+      $('.template').text()
+
+  class FacebookFriendsView extends Backbone.View
+    initialize: ->
+      @collection = new FacebookFriends
+      @collection.on('reset', @render, this)
+      @collection.fetch({ data: $.param({ link: $.parseJSON($('.template').text()).link }) })
+
+    render: ->
+      this.$el.html(HandlebarsTemplates['facebook_share_widget/templates/all_friends']())
+      @collection.each(@appendFriend)
+
+    appendFriend: (friend) ->
+      friendView = new FacebookFriendView(model: friend)
+      @$('#friends').append(friendView.render().el)
+
+  if $('#container').length
+    new FacebookFriendsView(el: $('#container'))

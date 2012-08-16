@@ -38,7 +38,7 @@ module FacebookShareWidget
       friends
       shares = FacebookShareWidget::Share.all conditions: {url: url, user_facebook_id: "#{me.identifier}"}
       shares.each do | share |
-        friends[share.friend_facebook_id] = friends[share.friend_facebook_id].merge({:status => 'loaded'}) if friends[share.friend_facebook_id]
+        friends[share.friend_facebook_id] = friends[share.friend_facebook_id].merge({:status => 'shared'}) if friends[share.friend_facebook_id]
       end
       friends
     end

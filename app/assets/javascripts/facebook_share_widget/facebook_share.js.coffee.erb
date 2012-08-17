@@ -24,11 +24,11 @@ $ ->
     isShareFailed: ->
       @get('status') == 'failed'
 
-    share: (message, template) ->
+    share: (template) ->
       friend = this
       data = $.extend({}, $.parseJSON(template))
       data.facebook_id = @id
-      data.message = message
+      data.message = @messageModel.content()
       @startSharing()
       $.ajax
           url: @url
@@ -40,9 +40,59 @@ $ ->
               json = $.parseJSON(jqXHR.responseText)
               friend.shareFailedBecause(json.message)
 
+    setMessageModel: (model) ->
+      @messageModel = model
+
+  class SharingMessage extends Backbone.Model
+    content: ->
+      @get('msg')
+
+  class NameSearch extends Backbone.Model
+    searchFilter: ->
+      @get('filter')
+
+    setSearchFilter: (content)->
+      @set('filter': content)
+
   class FacebookFriends extends Backbone.Collection
     url: '/widget/facebook/friends'
     model: FacebookFriend
+
+    filterBy: (criteria) ->
+      unless criteria
+        return this.models
+      @criteria = criteria
+      @filter(@nameMatched)
+
+    nameMatched: (friend) =>
+      regex = new RegExp(@criteria, "i")
+      regex.test(friend.get('name'))
+
+  class SharingMessageView extends Backbone.View
+    events:
+      'blur .message' : 'update'
+
+    contructor: (options) ->
+      @model = options.model
+
+    render: ->
+      $(@el).html(HandlebarsTemplates['facebook_share_widget/templates/sharing_message']())
+      this
+
+    update: (options) =>
+      @model.set('msg', $('.message').val())
+
+  class NameSearchView extends Backbone.View
+    events:
+      'keyup .search-text' : 'filterUpdate'
+
+    render: ->
+      $(@el).html(HandlebarsTemplates['facebook_share_widget/templates/name_search']())
+      $(@el).children('.search-text').before("<img src='<%= asset_path("facebook_share_widget/facebook-logo.png") %>'/>")
+      this
+
+    filterUpdate: ->
+      @model.setSearchFilter($('input.search-text').val())
 
   class FacebookFriendView extends Backbone.View
     tagName: 'li'
@@ -83,23 +133,37 @@ $ ->
 
     shareToFriend: (event) ->
       event.preventDefault()
-      @model.share(@sharingMessage(),@sharingTemplate())
-
-    sharingMessage: ->
-      $('textarea.message').val()
+      @model.share(@sharingTemplate())
 
     sharingTemplate: ->
       $('.template').text()
 
   class FacebookFriendsView extends Backbone.View
     initialize: ->
+      @sharingMessage = new SharingMessage
+      @sharingMessageView = new SharingMessageView(el: $('.message-pane'), model: @sharingMessage)
+      @sharingMessageView.render()
+
       @collection = new FacebookFriends
       @collection.on('reset', @render, this)
+      @collection.on('reset', @bindMessageModel, this)
       @collection.fetch({ data: $.param({ link: $.parseJSON($('.template').text()).link }) })
+
+      @nameSearch = new NameSearch
+      @nameSearch.on('change', @render, this)
+      @nameSearchView = new NameSearchView(el: $('.name-search'), model: @nameSearch)
+      @nameSearchView.render()
+
+    setMessageModel: (friend) =>
+      friend.setMessageModel(@sharingMessage)
+
+    bindMessageModel: ->
+      @collection.each(@setMessageModel)
 
     render: ->
       this.$el.html(HandlebarsTemplates['facebook_share_widget/templates/all_friends']())
-      @collection.each(@appendFriend)
+      filteredFriends = @collection.filterBy(@nameSearch.searchFilter())
+      @appendFriend friend for friend in filteredFriends
 
     appendFriend: (friend) ->
       friendView = new FacebookFriendView(model: friend)

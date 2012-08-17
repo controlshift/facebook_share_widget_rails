@@ -64,7 +64,7 @@ describe FacebookShareWidget::FacebookHelper do
         friends = {"1" => { id: "1", name: "name" }, "2" => { id: "2", name: "name2" }}
 
         with_appends = subject.append_shares_loaded(friends, 'http://www.google.com/')
-        with_appends.should == { "1" => { status: 'loaded', id: "1", name: "name" }, "2" => { id: "2", name: "name2" }}
+        with_appends.should == { "1" => { status: 'shared', id: "1", name: "name" }, "2" => { id: "2", name: "name2" }}
       end
     end
     

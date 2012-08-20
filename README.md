@@ -1,5 +1,8 @@
 # Facebook Share Widget - Rails Plugin
 
+[![Build Status](https://secure.travis-ci.org/controlshift/facebook_share_widget_rails.png)](http://travis-ci.org/controlshift/facebook_share_widget_rails)
+
+
 This project rocks.
 
 ![](http://f.cl.ly/items/1l2O1z3F141l1J473t1v/Screen%20Shot%202012-05-22%20at%2011.21.53%20AM.png)

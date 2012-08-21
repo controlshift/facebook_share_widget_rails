@@ -1,52 +1,9 @@
 #= require underscore.js
 #= require backbone.js
 #= require handlebars-runtime.js
+#= require facebook_share_widget/sharing_message
 
 $ ->
-  class FacebookFriend extends Backbone.Model
-    url: '/widget/facebook/share'
-
-    isShared: ->
-      @get('status') == 'shared'
-
-    shared: ->
-      @set('status': 'shared')
-
-    isSharing: ->
-      @get('status') == 'sharing'
-
-    startSharing: ->
-      @set('status': 'sharing')
-
-    shareFailedBecause: (reason)->
-      @set('status': 'failed', 'reason': reason)
-
-    isShareFailed: ->
-      @get('status') == 'failed'
-
-    share: (template) ->
-      friend = this
-      data = $.extend({}, $.parseJSON(template))
-      data.facebook_id = @id
-      data.message = @messageModel.content()
-      @startSharing()
-      $.ajax
-          url: @url
-          type: "post"
-          data: { post: data }
-          success: (resp) =>
-              friend.shared()
-          error: (jqXHR, textStatus, errorThrown) =>
-              json = $.parseJSON(jqXHR.responseText)
-              friend.shareFailedBecause(json.message)
-
-    setMessageModel: (model) ->
-      @messageModel = model
-
-  class SharingMessage extends Backbone.Model
-    content: ->
-      @get('msg')
-
   class NameSearch extends Backbone.Model
     searchFilter: ->
       @get('filter')
@@ -56,7 +13,7 @@ $ ->
 
   class FacebookFriends extends Backbone.Collection
     url: '/widget/facebook/friends'
-    model: FacebookFriend
+    model: app.models.FacebookFriend
 
     filterBy: (criteria) ->
       unless criteria
@@ -94,53 +51,9 @@ $ ->
     filterUpdate: ->
       @model.setSearchFilter($('input.search-text').val())
 
-  class FacebookFriendView extends Backbone.View
-    tagName: 'li'
-    events:
-      'click.share-button': 'shareToFriend'
-
-    initialize: ->
-      @model.on('change', @render, this)
-
-    render: ->
-      friend = @model.toJSON()
-      $(@el).html(HandlebarsTemplates['facebook_share_widget/templates/friend'](friend))
-      if @model.isShared()
-        @renderShared()
-      else if @model.isSharing()
-        @renderSharing()
-      else if @model.isShareFailed()
-        @renderFailed(friend)
-      else
-        @renderToShare(friend)
-      this
-
-    renderShared: ->
-      $(@el).append("<div class='indicator'><img src='<%= asset_path("facebook_share_widget/tick.png") %>'/> Shared</div>")
-      this
-
-    renderSharing: ->
-      $(@el).append("<div class='indicator'><img src='<%= asset_path("facebook_share_widget/loader.gif") %>'/> Sharing</div>")
-      this
-
-    renderToShare: (friend) ->
-      $(@el).append("<a class='share-button' data-facebook-id='#{friend.id}'>Share</a>")
-      this
-
-    renderFailed: (friend) ->
-      $(@el).children('.error-message').text(friend.reason)
-      this
-
-    shareToFriend: (event) ->
-      event.preventDefault()
-      @model.share(@sharingTemplate())
-
-    sharingTemplate: ->
-      $('.template').text()
-
   class FacebookFriendsView extends Backbone.View
     initialize: ->
-      @sharingMessage = new SharingMessage
+      @sharingMessage = new app.models.SharingMessage
       @sharingMessageView = new SharingMessageView(el: $('.message-pane'), model: @sharingMessage)
       @sharingMessageView.render()
 
@@ -166,8 +79,9 @@ $ ->
       @appendFriend friend for friend in filteredFriends
 
     appendFriend: (friend) ->
-      friendView = new FacebookFriendView(model: friend)
+      friendView = new app.views.FacebookFriendView(model: friend)
       @$('#friends').append(friendView.render().el)
 
   if $('#container').length
     new FacebookFriendsView(el: $('#container'))
+

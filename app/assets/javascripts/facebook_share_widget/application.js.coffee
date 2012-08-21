@@ -5,3 +5,12 @@
 # the compiled file.
 #= require_tree .
 #
+
+window.app =
+  models: {}
+  views: {}
+
+window.facebookShareWidget =
+  callbacks:
+    success: (friend) ->
+    fail: (friend) ->

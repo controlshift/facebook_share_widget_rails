@@ -2,6 +2,7 @@ require 'fileutils'
 
 def copy_files
   dist_dir =  "#{Rails.root}/../../public/javascripts/"
+  FileUtils.mkdir_p(dist_dir)
   ['backbone.js', 'handlebars-runtime.js', 'underscore.js'].each do |file|
     fullpath =  "#{Rails.root}/../../app/assets/javascripts/#{file}"
     FileUtils.copy_file fullpath, "#{dist_dir}/#{file}"

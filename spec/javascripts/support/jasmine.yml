@@ -1,0 +1,13 @@
+src_dir: public/javascripts
+
+src_files:
+  - jquery.js
+  - underscore.js
+  - backbone.js
+  - handlebars-runtime.js
+  - compiled/*.js
+
+spec_dir: spec/javascripts
+
+spec_files:
+  - '**/*_spec.js'

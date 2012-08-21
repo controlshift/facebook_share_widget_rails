@@ -22,3 +22,15 @@ guard 'rspec', :version => 2 do
   watch(%r{^spec/acceptance/steps/(.+)_steps\.rb$})   { |m| Dir[File.join("**/#{m[1]}.feature")][0] || 'spec/acceptance' }
 end
 
+guard 'coffeescript', :output => 'public/javascripts/compiled' do
+  watch('^app/assets/javascripts/facebook_share_widget/(.*)\.coffee')
+end
+
+guard 'coffeescript', :output => 'spec/javascripts' do
+  watch('^spec/coffeescripts/(.*)\.coffee')
+end
+
+guard 'livereload' do
+  watch('^spec/javascripts/.+\.js$')
+  watch('^public/javascripts/compiled/.+\.js$')
+end

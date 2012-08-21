@@ -10,3 +10,7 @@ spec/dummy/.sass-cache
 .sass-cache/
 *.tmproj
 .idea/
+
+* Ignore all compiled files
+/public/
+/spec/javascripts/*.js

@@ -14,3 +14,10 @@ gem 'haml-rails'
 gem 'sass-rails'
 gem 'coffee-rails'
 gem 'compass-rails'
+
+group :development, :test do
+  gem 'jasmine'
+  gem 'guard'
+  gem 'guard-coffeescript'
+  gem 'guard-livereload'
+end

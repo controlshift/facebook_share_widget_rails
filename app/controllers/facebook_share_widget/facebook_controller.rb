@@ -30,7 +30,7 @@ class FacebookShareWidget::FacebookController < FacebookShareWidget::Application
   def log_exception_and_render_as_json(ex)
     Rails.logger.warn ex.message
     Rails.logger.warn ex.backtrace.join("\n")
-    ExceptionNotifier::Notifier.background_exception_notification(ex) if defined? ExceptionNotifier 
-    render json: { message: ex.message }, status: :internal_server_error
+    ExceptionNotifier::Notifier.background_exception_notification(ex) if defined? ExceptionNotifier
+    render json: { message: "You've exceeded your daily facebook share limit." }, status: :internal_server_error
   end
 end

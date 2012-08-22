@@ -1,6 +1,9 @@
 require 'spec_helper'
 
 describe FacebookShareWidget::FacebookController do
+
+  let(:user_prompt) { "You've exceeded your daily facebook share limit." }
+
   describe "#index" do
     before :each do
       get :index
@@ -27,7 +30,7 @@ describe FacebookShareWidget::FacebookController do
       get :friends
       
       response.should_not be_successful
-      response.body.should == { message: error.message }.to_json
+      response.body.should == { message: user_prompt }.to_json
     end
   end
   
@@ -60,7 +63,7 @@ describe FacebookShareWidget::FacebookController do
       post :share
       
       response.should_not be_successful
-      response.body.should == { message: error.message }.to_json
+      response.body.should == { message: user_prompt }.to_json
     end
   end
 end

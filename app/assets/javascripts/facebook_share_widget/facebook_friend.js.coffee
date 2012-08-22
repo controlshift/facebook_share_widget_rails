@@ -6,6 +6,12 @@ $ ->
   class FacebookFriend extends Backbone.Model
     url: '/widget/facebook/share'
 
+    constructor: ->
+      Backbone.Model.apply(this, arguments)
+      @options = arguments[0] ? {}
+      @success_callback = @options.success_callback ? window.facebookShareWidget.callbacks.success
+      @fail_callback = @options.fail_callback ? window.facebookShareWidget.callbacks.fail
+
     isShared: ->
       @get('status') == 'shared'
 
@@ -36,9 +42,11 @@ $ ->
         data: { post: data }
         success: (resp) =>
           friend.shared()
+          friend.success_callback(friend)
         error: (jqXHR, textStatus, errorThrown) =>
           json = $.parseJSON(jqXHR.responseText)
           friend.shareFailedBecause(json.message)
+          friend.fail_callback(friend)
 
     setMessageModel: (model) ->
       @messageModel = model

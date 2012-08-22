@@ -24,7 +24,7 @@ class FacebookShareWidget::FacebookController < FacebookShareWidget::Application
       log_exception_and_render_as_json(ex)
     end
   end
-  
+
   private
   
   def log_exception_and_render_as_json(ex)

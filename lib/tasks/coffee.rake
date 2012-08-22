@@ -19,7 +19,7 @@ namespace :coffee do
     compile_coffee src_dir, dist_dir 
   end
 
-  task :compile do
+  task :compile => :clean do
     src_dir = "#{Rails.root}/../../app/assets/javascripts/facebook_share_widget"
     dist_dir = "#{Rails.root}/../../public/javascripts/compiled"
     compile_coffee src_dir, dist_dir

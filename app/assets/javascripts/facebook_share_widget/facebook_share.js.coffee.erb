@@ -29,9 +29,6 @@ $ ->
     events:
       'blur .message' : 'update'
 
-    constructor: (options) ->
-      @model = options.model
-
     render: ->
       $(@el).html(HandlebarsTemplates['facebook_share_widget/templates/sharing_message']())
       this

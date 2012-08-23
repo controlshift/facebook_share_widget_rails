@@ -50,19 +50,25 @@ $ ->
 
   class FacebookFriendsView extends Backbone.View
     initialize: ->
+      @loading()
       @sharingMessage = new app.models.SharingMessage
       @sharingMessageView = new SharingMessageView(el: $('.message-pane'), model: @sharingMessage)
       @sharingMessageView.render()
-
-      @collection = new FacebookFriends
-      @collection.on('reset', @render, this)
-      @collection.on('reset', @bindMessageModel, this)
-      @collection.fetch({ data: $.param({ link: $.parseJSON($('.template').text()).link }) })
 
       @nameSearch = new NameSearch
       @nameSearch.on('change', @render, this)
       @nameSearchView = new NameSearchView(el: $('.name-search'), model: @nameSearch)
       @nameSearchView.render()
+
+      @collection = new FacebookFriends
+      @collection.on("reset", @render, this)
+      @collection.on("reset", @bindMessageModel, this)
+      @collection = new FacebookFriends
+
+    load: =>
+      self = this
+      @collection.fetch({ data: $.param({ link: $.parseJSON($('.template').text()).link }) }).complete ->
+        self.render()
 
     setMessageModel: (friend) =>
       friend.setMessageModel(@sharingMessage)
@@ -70,15 +76,20 @@ $ ->
     bindMessageModel: ->
       @collection.each(@setMessageModel)
 
-    render: ->
+    render: =>
       this.$el.html(HandlebarsTemplates['facebook_share_widget/templates/all_friends']())
       filteredFriends = @collection.filterBy(@nameSearch.searchFilter())
       @appendFriend friend for friend in filteredFriends
+
+    loading: =>
+      this.$el.html(HandlebarsTemplates['facebook_share_widget/templates/all_friends']())
+      this.$el.children('#friends').append("<img src='<%= asset_path("facebook_share_widget/loader.gif") %>'/>")
 
     appendFriend: (friend) ->
       friendView = new app.views.FacebookFriendView(model: friend)
       @$('#friends').append(friendView.render().el)
 
   if $('#container').length
-    new FacebookFriendsView(el: $('#container'))
-
+    f = new FacebookFriendsView(el: $('#container'))
+    window.delayed_load = f.load
+    setTimeout(window.delayed_load, 100)

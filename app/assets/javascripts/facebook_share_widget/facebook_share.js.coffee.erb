@@ -63,7 +63,6 @@ $ ->
       @collection = new FacebookFriends
       @collection.on("reset", @render, this)
       @collection.on("reset", @bindMessageModel, this)
-      @collection = new FacebookFriends
 
     load: =>
       self = this

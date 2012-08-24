@@ -1,5 +1,5 @@
 $ ->
   class SharingMessage extends Backbone.Model
     content: ->
-      @get('msg')
+      @get('msg') ? ''
   app.models.SharingMessage = SharingMessage

@@ -8,7 +8,7 @@ class FacebookShareWidget::FacebookController < FacebookShareWidget::Application
     begin
       @employers = my_employers
     rescue Exception => ex
-      log_exception_and_render_as_json(ex)
+      render json: { message: "You are probably not logged in" }, status: :not_found
     end
   end
 

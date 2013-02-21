@@ -51,7 +51,7 @@ describe FacebookShareWidget::FacebookController do
       get :employers
       
       response.should_not be_successful
-      response.body.should == { message: user_prompt }.to_json
+      response.body.should == { message: "You are probably not logged in" }.to_json
     end
   end
   describe "#share" do

@@ -20,7 +20,7 @@ module FacebookShareWidget
   
     def my_employers
       employers = []
-      facebook_me.work.each do |work_object| 
+      facebook_me.fetch.work.each do |work_object| 
         employers << work_object.employer
       end
       employers

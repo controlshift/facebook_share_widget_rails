@@ -97,13 +97,13 @@ describe FacebookShareWidget::FacebookHelper do
     
     describe "#my_employers" do
       it "should return back list of my employers" do
-        raw_employers = [OpenStruct.new(employer: { id: "1", name: "name" }, position: {id: "123", 
+        raw_employers = [OpenStruct.new(employer: { identifier: "1", name: "name" }, position: {id: "123", 
         name: "Senior Consultant"}, start_date: "2012-03")]
-        me = mock
-        me.stub(:work) { raw_employers }
-        subject.stub(:facebook_me) { me }
+        fetch = mock
+        fetch.stub(:work) { raw_employers }
+        subject.stub(:facebook_me) { mock(fetch: fetch) }
         
-        subject.my_employers.should == [{ id: "1", name: "name" }]
+        subject.my_employers.should == [{ identifier: "1", name: "name" }]
       end
     end
     describe "#post" do

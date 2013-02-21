@@ -1,2 +1,7 @@
-- @employers.each do |employer|
-	= radio_button_tag 'employer', employer.name, false, id: "emp_#{employer.id}"
+%table.employers
+	- @employers.each do |employer|
+		%tr
+			%td
+				= radio_button_tag 'employer', employer.identifier
+			%td
+				= label_tag "employer_#{employer.identifier}", employer.name

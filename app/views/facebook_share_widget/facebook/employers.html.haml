@@ -1,0 +1,2 @@
+- @employers.each do |employer|
+	= radio_button_tag 'employer', employer.name, false, id: "emp_#{employer.id}"

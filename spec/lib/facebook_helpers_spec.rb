@@ -95,6 +95,17 @@ describe FacebookShareWidget::FacebookHelper do
       end
     end
     
+    describe "#my_employers" do
+      it "should return back list of my employers" do
+        raw_employers = [OpenStruct.new(employer: { id: "1", name: "name" }, position: {id: "123", 
+        name: "Senior Consultant"}, start_date: "2012-03")]
+        me = mock
+        me.stub(:work) { raw_employers }
+        subject.stub(:facebook_me) { me }
+        
+        subject.my_employers.should == [{ id: "1", name: "name" }]
+      end
+    end
     describe "#post" do
       it "should post to user wall" do
         user = mock

@@ -18,6 +18,14 @@ module FacebookShareWidget
       FbGraph::User.new(facebook_id, access_token: self.facebook_access_token)
     end
   
+    def my_employers
+      employers = []
+      facebook_me.work.each do |work_object| 
+        employers << work_object.employer
+      end
+      employers
+    end
+
     def facebook_friends
       Rails.cache.fetch("friends_for_#{self.facebook_access_token}", :expires_in => 1.hour) do
         friends = {}

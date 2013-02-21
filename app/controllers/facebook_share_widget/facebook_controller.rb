@@ -4,6 +4,14 @@ class FacebookShareWidget::FacebookController < FacebookShareWidget::Application
   def index
   end
   
+  def employers
+    begin
+      @employers = my_employers
+    rescue Exception => ex
+      log_exception_and_render_as_json(ex)
+    end
+  end
+
   def friends
     begin
       render json: facebook_friends_for_link(params[:link]), status: :ok

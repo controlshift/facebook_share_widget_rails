@@ -33,7 +33,27 @@ describe FacebookShareWidget::FacebookController do
       response.body.should == { message: user_prompt }.to_json
     end
   end
-  
+  describe "#employers" do
+    it "should return employers list" do
+      employers = [{ id: "1", name: "Thoughtworks" }]
+      controller.should_receive(:my_employers) { employers }
+
+      get :employers
+      
+      response.should be_successful
+      assigns(:employers).to_json.should == employers.to_json
+    end
+    
+    it "should return error message on fail" do
+      error = Exception.new("some error")
+      controller.should_receive(:my_employers).and_raise(error)
+      
+      get :employers
+      
+      response.should_not be_successful
+      response.body.should == { message: user_prompt }.to_json
+    end
+  end
   describe "#share" do
     context "successful post" do
       before(:each) do

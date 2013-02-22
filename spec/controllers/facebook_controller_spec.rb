@@ -14,10 +14,20 @@ describe FacebookShareWidget::FacebookController do
   
   describe "#friends" do
     it "should return friend list" do
-      friends = [{ id: "1", name: "test" }]
-      controller.should_receive(:facebook_friends_for_link).with('http://google.com/') { friends }
+      friends = [{ id: "1", name: "test"}]
+      controller.should_receive(:facebook_friends_for_link).with('http://google.com/', nil) { friends }
 
       get :friends, link: 'http://google.com/'
+      
+      response.should be_successful
+      response.body.should == friends.to_json
+    end
+
+    it "should return friend list" do
+      friends = [{ id: "1", name: "test"}]
+      controller.should_receive(:facebook_friends_for_link).with('http://google.com/', 1234) { friends }
+
+      get :friends, link: 'http://google.com/', compId: 1234
       
       response.should be_successful
       response.body.should == friends.to_json
@@ -25,7 +35,7 @@ describe FacebookShareWidget::FacebookController do
     
     it "should return error message on fail" do
       error = Exception.new("some error")
-      controller.should_receive(:facebook_friends_for_link).with(anything()).and_raise(error)
+      controller.should_receive(:facebook_friends_for_link).with(anything(), anything()).and_raise(error)
       
       get :friends
       

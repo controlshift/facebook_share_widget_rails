@@ -1,7 +1,9 @@
-%table.employers
-	- @employers.each do |employer|
-		%tr
-			%td{width: '25px'}
-				= radio_button_tag 'employer', employer.identifier
-			%td
-				= label_tag "employer_#{employer.identifier}", employer.name
+= javascript_include_tag 'widget/employers'
+.employers
+	%table
+		- @employers.each do |employer|
+			%tr
+				%td{width: '25px'}
+					= radio_button_tag 'employer', employer.identifier
+				%td
+					= label_tag "employer_#{employer.identifier}", employer.name

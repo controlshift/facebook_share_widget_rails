@@ -19,31 +19,41 @@ module FacebookShareWidget
     end
   
     def my_employers
-      employers = []
-      facebook_me.fetch.work.each do |work_object| 
-        employers << work_object.employer
+      Rails.cache.fetch("employers_of_#{self.facebook_access_token}", :expires_in => 24.hours) do
+        employers = []
+        facebook_me.fetch.work.each do |work_object| 
+          employers << work_object.employer
+        end
+        employers
       end
-      employers
     end
 
-    def facebook_friends
-      Rails.cache.fetch("friends_for_#{self.facebook_access_token}", :expires_in => 1.hour) do
+    def facebook_friends(compId)
+      Rails.cache.fetch("friends_for_#{self.facebook_access_token}_at_#{compId}", :expires_in => 1.hour) do
         friends = {}
-        facebook_me.friends.each do|f|
-          friends[f.identifier] = { id: f.identifier, name: f.name }
+        if(compId != nil)
+          FbGraph::Query.new('select uid, name, work.employer.id from user where uid in (select uid2 from friend where uid1=me())').
+          fetch(self.facebook_access_token).each do|f|
+            if(f[:work].collect {|a| a[:employer]}.collect {|a| a[:id]}.include?(compId))
+              friends[f[:uid]] = { id: f[:uid], name: f[:name] }
+            end
+          end
+        else
+          facebook_me.friends.each do|f|
+            friends[f.identifier] = { id: f.identifier, name: f.name }
+          end
         end
         friends
       end
     end
     
-    def facebook_friends_for_link(url)
-      friends = append_shares_loaded(facebook_friends, url)
+    def facebook_friends_for_link(url, compId)
+      friends = append_shares_loaded(facebook_friends(compId), url)
       friends.collect {|key, value| value }
     end
     
     def append_shares_loaded(friends, url)
       me = facebook_me.fetch
-      friends
       shares = FacebookShareWidget::Share.all conditions: {url: url, user_facebook_id: "#{me.identifier}"}
       shares.each do | share |
         friends[share.friend_facebook_id] = friends[share.friend_facebook_id].merge({:status => 'shared'}) if friends[share.friend_facebook_id]

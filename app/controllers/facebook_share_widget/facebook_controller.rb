@@ -14,7 +14,7 @@ class FacebookShareWidget::FacebookController < FacebookShareWidget::Application
 
   def friends
     begin
-      render json: facebook_friends_for_link(params[:link]), status: :ok
+      render json: facebook_friends_for_link(params[:link], params[:compId] ? params[:compId].to_i : nil), status: :ok
     rescue Exception => ex
       log_exception_and_render_as_json(ex)
     end
@@ -26,7 +26,7 @@ class FacebookShareWidget::FacebookController < FacebookShareWidget::Application
       post(params[:post])
       share = FacebookShareWidget::Share.new(user_facebook_id: me.identifier, friend_facebook_id: params[:post][:facebook_id], url: params[:post][:link], message: params[:post][:message])
       share.save!
-        
+
       render json: {}, status: :ok
     rescue Exception => ex
       log_exception_and_render_as_json(ex)

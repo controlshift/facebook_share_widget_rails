@@ -1,7 +1,6 @@
 #= require underscore.js
 #= require backbone.js
 #= require handlebars-runtime.js
-#= require facebook_share_widget/sharing_message
 
 $ ->
   class NameSearch extends Backbone.Model
@@ -25,17 +24,6 @@ $ ->
       regex = new RegExp(@criteria, "i")
       regex.test(friend.get('name'))
 
-  class SharingMessageView extends Backbone.View
-    events:
-      'blur .message' : 'update'
-
-    render: ->
-      $(@el).html(HandlebarsTemplates['facebook_share_widget/templates/sharing_message']())
-      this
-
-    update: (options) =>
-      @model.set('msg', $('.message').val())
-
   class NameSearchView extends Backbone.View
     events:
       'keyup .search-text' : 'filterUpdate'
@@ -51,10 +39,7 @@ $ ->
   class FacebookFriendsView extends Backbone.View
     initialize: ->
       @loading()
-      @sharingMessage = new app.models.SharingMessage
-      @sharingMessageView = new SharingMessageView(el: $('.message-pane'), model: @sharingMessage)
-      @sharingMessageView.render()
-
+      
       @nameSearch = new NameSearch
       @nameSearch.on('change', @render, this)
       @nameSearchView = new NameSearchView(el: $('.name-search'), model: @nameSearch)
@@ -62,7 +47,6 @@ $ ->
 
       @collection = new FacebookFriends
       @collection.on("reset", @render, this)
-      @collection.on("reset", @bindMessageModel, this)
 
     load: =>
       self = this
@@ -72,12 +56,6 @@ $ ->
         params['compId'] = json_message.compId
       @collection.fetch({ data: $.param(params) }).complete ->
         self.render()
-
-    setMessageModel: (friend) =>
-      friend.setMessageModel(@sharingMessage)
-
-    bindMessageModel: ->
-      @collection.each(@setMessageModel)
 
     render: =>
       this.$el.html(HandlebarsTemplates['facebook_share_widget/templates/all_friends']())

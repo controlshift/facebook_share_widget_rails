@@ -115,14 +115,7 @@ describe FacebookShareWidget::FacebookHelper do
         subject.my_employers.should == [{ identifier: "1", name: "name" }]
       end
     end
-    describe "#post" do
-      it "should post to user wall" do
-        user = mock
-        user.should_receive(:feed!).with({ message: "message" })
-        subject.should_receive(:facebook_user).with("12345") { user }
 
-        subject.post({ facebook_id: "12345", message: "message" })
-      end
-    end
+    it {should respond_to :message_for}
   end
 end

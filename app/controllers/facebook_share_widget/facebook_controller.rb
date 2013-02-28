@@ -22,12 +22,12 @@ class FacebookShareWidget::FacebookController < FacebookShareWidget::Application
   
   def share
     begin
-      me = facebook_me.fetch
-      post(params[:post])
-      share = FacebookShareWidget::Share.new(user_facebook_id: me.identifier, friend_facebook_id: params[:post][:facebook_id], url: params[:post][:link], message: params[:post][:message])
-      share.save!
-
-      render json: {}, status: :ok
+      if params[:post_id]
+        me = facebook_me.fetch
+        share = FacebookShareWidget::Share.new(user_facebook_id: me.identifier, friend_facebook_id: params[:facebook_id], url: params[:link], message: message_for(params[:post_id]))
+        share.save!
+      end
+      render layout: false
     rescue Exception => ex
       log_exception_and_render_as_json(ex)
     end

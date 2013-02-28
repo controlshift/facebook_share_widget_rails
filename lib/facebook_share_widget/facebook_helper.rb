@@ -60,11 +60,9 @@ module FacebookShareWidget
       end
       friends
     end
-  
-    def post(post = {})
-      p = post.dup #fix pass by reference bug.
-      facebook_id = p.delete(:facebook_id)
-      facebook_user(facebook_id).feed!(p)
+    
+    def message_for post_id
+      FbGraph::Post.new(post_id).fetch(:access_token => self.facebook_access_token).message
     end
   end
 end

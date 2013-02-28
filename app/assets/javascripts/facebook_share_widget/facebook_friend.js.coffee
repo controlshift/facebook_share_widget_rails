@@ -4,7 +4,7 @@
 
 $ ->
   class FacebookFriend extends Backbone.Model
-    url: '/widget/facebook/share'
+    url: 'https://www.facebook.com/dialog/feed?app_id={app_id}&link={link}&to={to}&redirect_uri={redirect_uri}'
 
     constructor: ->
       Backbone.Model.apply(this, arguments)
@@ -34,20 +34,13 @@ $ ->
       friend = this
       data = $.extend({}, $.parseJSON(template))
       data.facebook_id = @id
-      data.message = @messageModel.content()
-      @startSharing()
-      $.ajax
-        url: @url
-        type: "post"
-        data: { post: data }
-        success: (resp) =>
-          friend.shared()
-          friend.success_callback(friend)
-        error: (jqXHR, textStatus, errorThrown) =>
-          json = $.parseJSON(jqXHR.responseText)
-          friend.shareFailedBecause(json.message)
-          friend.fail_callback(friend)
+      redirect_uri = 'http://rohitggarg.dyndns.org:3000/widget/facebook/share-redirect?facebook_id='+data.facebook_id+'&link='+data.link
 
+      window.open @url.replace('{app_id}', data.appId).replace('{to}', data.facebook_id).replace('{link}', encodeURIComponent(data.link)).replace('{redirect_uri}',encodeURIComponent(redirect_uri)), 'sharer', 'toolbar=0,status=0,width=1000,height=600'
+
+      friend.shared()
+      friend.success_callback(friend)
+      
     setMessageModel: (model) ->
       @messageModel = model
 

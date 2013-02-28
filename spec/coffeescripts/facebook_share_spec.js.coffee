@@ -11,7 +11,6 @@ describe "FacebookFriend ", ->
     spyOn($, "ajax").andCallFake (options)->
       options.success()
     facebookFriend = new app.models.FacebookFriend
-    facebookFriend.setMessageModel(new app.models.SharingMessage( msg: 'msg'))
     facebookFriendView = new app.views.FacebookFriendView(model: facebookFriend, el: $('#sandbox'))
     facebookFriendView.render()
 
@@ -28,7 +27,6 @@ describe "FacebookFriend ", ->
     window.facebookShareWidget.callbacks.success = @success_callback
 
     facebookFriend = new app.models.FacebookFriend
-    facebookFriend.setMessageModel(new app.models.SharingMessage( msg: 'msg'))
     facebookFriendView = new app.views.FacebookFriendView(model: facebookFriend, el: $('#sandbox'))
     facebookFriendView.render()
 
@@ -43,7 +41,6 @@ describe "FacebookFriend ", ->
     spyOn(this, 'success_callback')
 
     facebookFriend = new app.models.FacebookFriend success_callback: @success_callback
-    facebookFriend.setMessageModel(new app.models.SharingMessage( msg: 'msg'))
     facebookFriendView = new app.views.FacebookFriendView(model: facebookFriend, el: $('#sandbox'))
     facebookFriendView.render()
 
@@ -56,7 +53,6 @@ describe "FacebookFriend ", ->
       options.error({responseText: '{"message":"111"}'})
 
     facebookFriend = new app.models.FacebookFriend
-    facebookFriend.setMessageModel(new app.models.SharingMessage( msg: 'msg'))
     facebookFriendView = new app.views.FacebookFriendView(model: facebookFriend, el: $('#sandbox'))
     facebookFriendView.render()
 
@@ -72,7 +68,6 @@ describe "FacebookFriend ", ->
     spyOn(this, 'error_callback')
 
     facebookFriend = new app.models.FacebookFriend fail_callback: @error_callback
-    facebookFriend.setMessageModel(new app.models.SharingMessage( msg: 'msg'))
     facebookFriendView = new app.views.FacebookFriendView(model: facebookFriend, el: $('#sandbox'))
     facebookFriendView.render()
 

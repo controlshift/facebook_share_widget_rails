@@ -67,15 +67,15 @@ describe FacebookShareWidget::FacebookController do
   describe "#share" do
     context "successful post" do
       before(:each) do
-        post_attrs = { "name"=>"name of page", "message" => "hi", 'facebook_id' => '1', 'link' => 'http://www.communityrun.org/' }
-        controller.should_receive(:post).with(post_attrs)
+        post_attrs = {'facebook_id' => '1', 'link' => 'http://www.communityrun.org/', 'post_id' => '1234'}
+        controller.should_receive(:message_for).with('1234').and_return('test message')
 
         me = mock()
         me.should_receive(:fetch).and_return(fetch = mock())
         fetch.should_receive(:identifier).and_return(1)
         controller.should_receive(:facebook_me).and_return(me)
 
-        post :share, post: post_attrs     
+        post :share, post_attrs
       end
 
       
@@ -85,12 +85,12 @@ describe FacebookShareWidget::FacebookController do
     
     it "should return error message on fail" do
       error = Exception.new("some error")
-      controller.should_receive(:post).and_raise(error)
+      controller.should_receive(:message_for).with('1234').and_raise(error)
       me = mock()
-      me.should_receive(:fetch).and_return(fetch = mock())
+      me.should_receive(:fetch).and_return(fetch = mock(identifier: 1))
       controller.should_receive(:facebook_me).and_return(me)
       
-      post :share
+      post :share, post_id: '1234'
       
       response.should_not be_successful
       response.body.should == { message: user_prompt }.to_json

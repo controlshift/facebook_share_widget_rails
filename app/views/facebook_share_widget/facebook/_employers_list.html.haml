@@ -1,0 +1,9 @@
+%table
+  - @employers.each do |employer|
+    - employer_id = friends_employers_list ? employer["id"] : employer.identifier
+    - employer_name = friends_employers_list ? employer["name"] : employer.name
+    %tr
+      %td{width: '25px'}
+        = radio_button_tag 'compId', employer_id
+      %td
+        = label_tag "employer_#{employer_id}", employer_name

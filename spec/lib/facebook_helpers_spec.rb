@@ -116,6 +116,23 @@ describe FacebookShareWidget::FacebookHelper do
       end
     end
 
+    describe "#friends_employers" do
+      it "should return back list of top five friends employers" do
+        raw_friends = [{ uid: "1", name: "name1" ,work: [{employer: {id: 11, name: "name11"}}]},
+                        { uid: "2", name: "name2" ,work: [{employer: {id: 22, name: "name22"}}]},
+                        { uid: "3", name: "name3" ,work: [{employer: {id: 33, name: "name33"}}]},
+                        { uid: "4", name: "name4" ,work: [{employer: {id: 44, name: "name44"}}]},
+                        { uid: "5", name: "name5" ,work: [{employer: {id: 66, name: "name66"}}]},
+                        { uid: "6", name: "name6" ,work: [{employer: {id: 55, name: "name55"}}]},
+                        { uid: "7", name: "name7" ,work: [{employer: {id: 11, name: "name11"}}]},
+                        { uid: "8", name: "name8" ,work: [{employer: {id: 66, name: "name66"}}]},
+                        { uid: "9", name: "name9" ,work: [{employer: {id: 66, name: "name66"}}]}]
+        FbGraph::Query.any_instance.stub(:fetch).with(anything()).and_return(raw_friends)
+        subject.stub(:facebook_access_token).and_return('test')
+        subject.friends_employers.size.should == 5
+      end
+    end
+
     it {should respond_to :message_for}
   end
 end

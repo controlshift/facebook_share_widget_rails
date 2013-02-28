@@ -12,6 +12,14 @@ class FacebookShareWidget::FacebookController < FacebookShareWidget::Application
     end
   end
 
+  def change_employer
+    begin
+      @employers = friends_employers
+    rescue Exception => ex
+      render json: { message: "You are probably not logged in" }, status: :not_found
+    end
+  end
+
   def friends
     begin
       render json: facebook_friends_for_link(params[:link], params[:compId] ? params[:compId].to_i : nil), status: :ok

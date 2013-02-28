@@ -96,4 +96,16 @@ describe FacebookShareWidget::FacebookController do
       response.body.should == { message: user_prompt }.to_json
     end
   end
+
+  describe "#change employer" do
+    it "should return atmost top five employers list" do
+      employers = [{ id: "1", name: "Thoughtworks" }, {id: "2", name: "ControlShift"}]
+      controller.should_receive(:friends_employers) { employers }
+
+      get :change_employer
+      
+      response.should be_successful
+      assigns(:employers).to_json.should == employers.to_json
+    end
+  end
 end

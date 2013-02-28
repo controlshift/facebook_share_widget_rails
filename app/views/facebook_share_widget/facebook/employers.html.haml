@@ -1,9 +1,4 @@
+= javascript_include_tag 'widget/submit_employer'
 = javascript_include_tag 'widget/employers'
 .employers
-	%table
-		- @employers.each do |employer|
-			%tr
-				%td{width: '25px'}
-					= radio_button_tag 'employer', employer.identifier
-				%td
-					= label_tag "employer_#{employer.identifier}", employer.name
+  = render partial: 'employers_list', locals: { friends_employers_list: false }

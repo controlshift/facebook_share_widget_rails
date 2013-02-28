@@ -6,7 +6,7 @@ $ ->
   class FacebookFriendView extends Backbone.View
     tagName: 'li'
     events:
-      'click.share-button': 'shareToFriend'
+      'click .share-button': 'shareToFriend'
 
     initialize: ->
       @model.on('change', @render, this)

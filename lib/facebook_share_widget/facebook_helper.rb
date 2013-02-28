@@ -46,7 +46,7 @@ module FacebookShareWidget
           FbGraph::Query.new('select uid, name, work.employer.id from user where uid in (select uid2 from friend where uid1=me())').
           fetch(self.facebook_access_token).each do|f|
             if(f[:work].collect {|a| a[:employer]}.collect {|a| a[:id]}.include?(compId))
-              friends[f[:uid]] = { id: f[:uid], name: f[:name] }
+              friends[f[:uid].to_s] = { id: f[:uid], name: f[:name] }
             end
           end
         else

@@ -31,9 +31,9 @@ module FacebookShareWidget
     def friends_employers
       Rails.cache.fetch("friends_for_#{self.facebook_access_token}", :expires_in => 1.hour) do
         employers = Hash.new(0)
-        FbGraph::Query.new('select uid, name, work.employer from user where uid in (select uid2 from friend where uid1=me())').
+        FbGraph::Query.new('SELECT uid, name, work.employer FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me()) AND work.employer').
         fetch(self.facebook_access_token).each do|f|
-          employers[f[:work][0][:employer]] += 1 if !f[:work].empty?
+          employers[f[:work][0][:employer]] += 1
         end
         Hash[employers.sort {|a,b| b[1]<=>a[1]}].keys[0..4]
       end
@@ -43,7 +43,7 @@ module FacebookShareWidget
       Rails.cache.fetch("friends_for_#{self.facebook_access_token}_at_#{compId}", :expires_in => 1.hour) do
         friends = {}
         if(compId != nil)
-          FbGraph::Query.new('select uid, name, work.employer.id from user where uid in (select uid2 from friend where uid1=me())').
+          FbGraph::Query.new('SELECT uid, name, work.employer.id FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())').
           fetch(self.facebook_access_token).each do|f|
             if(f[:work].collect {|a| a[:employer]}.collect {|a| a[:id]}.include?(compId))
               friends[f[:uid].to_s] = { id: f[:uid], name: f[:name] }

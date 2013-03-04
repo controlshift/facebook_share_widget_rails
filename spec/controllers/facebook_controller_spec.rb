@@ -23,7 +23,7 @@ describe FacebookShareWidget::FacebookController do
       response.body.should == friends.to_json
     end
 
-    it "should return friend list" do
+    it "should return friend list with CompId" do
       friends = [{ id: "1", name: "test"}]
       controller.should_receive(:facebook_friends_for_link).with('http://google.com/', 1234) { friends }
 
@@ -51,6 +51,7 @@ describe FacebookShareWidget::FacebookController do
       get :employers
       
       response.should be_successful
+      response.should render_template "facebook_share_widget/facebook/employers"
       assigns(:employers).to_json.should == employers.to_json
     end
     
@@ -62,6 +63,16 @@ describe FacebookShareWidget::FacebookController do
       
       response.should_not be_successful
       response.body.should == { message: "You are probably not logged in" }.to_json
+    end
+
+    it "should return no employers message when no employers are listed" do
+      employers = []
+      controller.should_receive(:my_employers) { employers }
+
+      get :employers
+      
+      response.should be_successful
+      response.should render_template "facebook_share_widget/facebook/no_employers"
     end
   end
   describe "#share" do
@@ -105,7 +116,18 @@ describe FacebookShareWidget::FacebookController do
       get :change_employer
       
       response.should be_successful
+      response.should render_template "facebook_share_widget/facebook/change_employer"
       assigns(:employers).to_json.should == employers.to_json
+    end
+
+    it "should return no employers message when no friends' employers are found" do
+      employers = []
+      controller.should_receive(:friends_employers) { employers }
+
+      get :change_employer
+      
+      response.should be_successful
+      response.should render_template "facebook_share_widget/facebook/no_friends_employers"
     end
   end
 end

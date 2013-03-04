@@ -7,6 +7,9 @@ class FacebookShareWidget::FacebookController < FacebookShareWidget::Application
   def employers
     begin
       @employers = my_employers
+      if @employers.empty?
+        render :no_employers
+      end
     rescue Exception => ex
       render json: { message: "You are probably not logged in" }, status: :not_found
     end
@@ -15,6 +18,9 @@ class FacebookShareWidget::FacebookController < FacebookShareWidget::Application
   def change_employer
     begin
       @employers = friends_employers
+      if @employers.empty?
+        render :no_friends_employers
+      end
     rescue Exception => ex
       render json: { message: "You are probably not logged in" }, status: :not_found
     end

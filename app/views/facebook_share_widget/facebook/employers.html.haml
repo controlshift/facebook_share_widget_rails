@@ -1,4 +1,6 @@
-= javascript_include_tag 'widget/submit_employer'
-= javascript_include_tag 'widget/employers'
 .employers
   = render partial: 'employers_list', locals: { friends_employers_list: false }
+:coffeescript
+	$ ->
+		window.Cs.submit_employer();
+		window.Cs.employers();

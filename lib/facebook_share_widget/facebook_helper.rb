@@ -44,7 +44,7 @@ module FacebookShareWidget
         data = Hash.new(0)
         FbGraph::Query.new("SELECT uid, name, #{personal_data_type} FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me()) AND #{personal_data_type}").
         fetch(self.facebook_access_token).each do|f|
-          data[get_data_array_for(personal_data_type, f, true)] += 1
+          data[get_data_array_for(personal_data_type, f, true).first] += 1
         end
         Hash[data.sort {|a,b| b[1]<=>a[1]}].keys[0..4]
       end

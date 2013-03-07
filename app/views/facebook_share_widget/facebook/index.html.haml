@@ -1,2 +1,3 @@
 = javascript_include_tag 'facebook_share_widget/facebook_friend_view'
-= facebook_share_widget_helper template: {link: params[:link], name: params[:name], compId: params[:compId], appId: params[:appId] }
+= javascript_include_tag "http://connect.facebook.net/#{I18n.locale}/all.js"
+= facebook_share_widget_helper template: {link: params[:link], name: params[:name], personal_dataId: params[:personal_dataId], appId: params[:appId], personal_data_type: params[:personal_data_type]}

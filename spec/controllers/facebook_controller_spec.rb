@@ -15,7 +15,7 @@ describe FacebookShareWidget::FacebookController do
   describe "#friends" do
     it "should return friend list" do
       friends = [{ id: "1", name: "test"}]
-      controller.should_receive(:facebook_friends_for_link).with('http://google.com/', nil) { friends }
+      controller.should_receive(:facebook_friends_for_link).with('http://google.com/', nil, nil) { friends }
 
       get :friends, link: 'http://google.com/'
       
@@ -25,9 +25,9 @@ describe FacebookShareWidget::FacebookController do
 
     it "should return friend list with CompId" do
       friends = [{ id: "1", name: "test"}]
-      controller.should_receive(:facebook_friends_for_link).with('http://google.com/', 1234) { friends }
+      controller.should_receive(:facebook_friends_for_link).with('http://google.com/', 1234, 'a.test') { friends }
 
-      get :friends, link: 'http://google.com/', compId: 1234
+      get :friends, link: 'http://google.com/', personal_dataId: 1234, personal_data_type: 'a$test'
       
       response.should be_successful
       response.body.should == friends.to_json
@@ -35,7 +35,7 @@ describe FacebookShareWidget::FacebookController do
     
     it "should return error message on fail" do
       error = Exception.new("some error")
-      controller.should_receive(:facebook_friends_for_link).with(anything(), anything()).and_raise(error)
+      controller.should_receive(:facebook_friends_for_link).with(anything(), anything(), anything()).and_raise(error)
       
       get :friends
       
@@ -46,20 +46,20 @@ describe FacebookShareWidget::FacebookController do
   describe "#employers" do
     it "should return employers list" do
       employers = [{ id: "1", name: "Thoughtworks" }]
-      controller.should_receive(:my_employers) { employers }
+      controller.should_receive(:my_personal_data).with('work.employer') { employers }
 
-      get :employers
+      get :personal_data, personal_data_type: 'work$employer'
       
       response.should be_successful
-      response.should render_template "facebook_share_widget/facebook/employers"
-      assigns(:employers).to_json.should == employers.to_json
+      response.should render_template "facebook_share_widget/facebook/personal_data"
+      assigns(:personal_data_results).to_json.should == employers.to_json
     end
     
     it "should return error message on fail" do
       error = Exception.new("some error")
-      controller.should_receive(:my_employers).and_raise(error)
+      controller.should_receive(:my_personal_data).with('work.employer').and_raise(error)
       
-      get :employers
+      get :personal_data, personal_data_type: 'work$employer'
       
       response.should_not be_successful
       response.body.should == { message: "You are probably not logged in" }.to_json
@@ -67,12 +67,12 @@ describe FacebookShareWidget::FacebookController do
 
     it "should return no employers message when no employers are listed" do
       employers = []
-      controller.should_receive(:my_employers) { employers }
+      controller.should_receive(:my_personal_data).with('work.employer') { employers }
 
-      get :employers
+      get :personal_data, personal_data_type: 'work$employer'
       
       response.should be_successful
-      response.should render_template "facebook_share_widget/facebook/no_employers"
+      response.should render_template "facebook_share_widget/facebook/no_personal_data"
     end
   end
   describe "#share" do
@@ -111,23 +111,23 @@ describe FacebookShareWidget::FacebookController do
   describe "#change employer" do
     it "should return atmost top five employers list" do
       employers = [{ id: "1", name: "Thoughtworks" }, {id: "2", name: "ControlShift"}]
-      controller.should_receive(:friends_employers) { employers }
+      controller.should_receive(:fb_friends_personal_data).with('work.employer') { employers }
 
-      get :change_employer
+      get :friends_personal_data, personal_data_type: 'work$employer'
       
       response.should be_successful
-      response.should render_template "facebook_share_widget/facebook/change_employer"
-      assigns(:employers).to_json.should == employers.to_json
+      response.should render_template "facebook_share_widget/facebook/friends_personal_data"
+      assigns(:personal_data_results).to_json.should == employers.to_json
     end
 
     it "should return no employers message when no friends' employers are found" do
       employers = []
-      controller.should_receive(:friends_employers) { employers }
+      controller.should_receive(:fb_friends_personal_data).with('work.employer') { employers }
 
-      get :change_employer
+      get :friends_personal_data, personal_data_type: 'work$employer'
       
       response.should be_successful
-      response.should render_template "facebook_share_widget/facebook/no_friends_employers"
+      response.should render_template "facebook_share_widget/facebook/no_friends_personal_data"
     end
   end
 end

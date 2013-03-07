@@ -35,11 +35,11 @@ $ ->
       data = $.extend({}, $.parseJSON(template))
       data.facebook_id = @id
       redirect_uri = window.location.protocol + '//' + window.location.host + '/widget/facebook/share-redirect?facebook_id='+data.facebook_id+'&link='+data.link
-
-      window.open @url.replace('{app_id}', data.appId).replace('{to}', data.facebook_id).replace('{link}', encodeURIComponent(data.link)).replace('{redirect_uri}',encodeURIComponent(redirect_uri)), 'sharer', 'toolbar=0,status=0,width=1000,height=600'
-
+      
+      FB.ui { method: 'feed', link: data.link, redirect_uri: redirect_uri, to: data.facebook_id }
       friend.shared()
       friend.success_callback(friend)
+      return
       
     setMessageModel: (model) ->
       @messageModel = model

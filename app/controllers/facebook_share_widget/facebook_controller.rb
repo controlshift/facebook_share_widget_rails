@@ -1,25 +1,27 @@
 class FacebookShareWidget::FacebookController < FacebookShareWidget::ApplicationController
   include FacebookShareWidget::FacebookHelper
   
+  before_filter :sanitize_params, :except => [:share]
+
   def index
   end
   
-  def employers
+  def personal_data
     begin
-      @employers = my_employers
-      if @employers.empty?
-        render :no_employers
+      @personal_data_results = my_personal_data @personal_data_type
+      if @personal_data_results.empty?
+        render :no_personal_data
       end
     rescue Exception => ex
       render json: { message: "You are probably not logged in" }, status: :not_found
     end
   end
 
-  def change_employer
+  def friends_personal_data
     begin
-      @employers = friends_employers
-      if @employers.empty?
-        render :no_friends_employers
+      @personal_data_results = fb_friends_personal_data @personal_data_type
+      if @personal_data_results.empty?
+        render :no_friends_personal_data
       end
     rescue Exception => ex
       render json: { message: "You are probably not logged in" }, status: :not_found
@@ -28,7 +30,7 @@ class FacebookShareWidget::FacebookController < FacebookShareWidget::Application
 
   def friends
     begin
-      render json: facebook_friends_for_link(params[:link], params[:compId] ? params[:compId].to_i : nil), status: :ok
+      render json: facebook_friends_for_link(params[:link], @personal_dataId, @personal_data_type), status: :ok
     rescue Exception => ex
       log_exception_and_render_as_json(ex)
     end
@@ -48,6 +50,11 @@ class FacebookShareWidget::FacebookController < FacebookShareWidget::Application
   end
 
   private
+
+  def sanitize_params
+    @personal_dataId = params[:personal_dataId] ? params[:personal_dataId].to_i : nil
+    @personal_data_type = params[:personal_data_type].present? ? params[:personal_data_type].gsub('$','.') : nil
+  end
   
   def log_exception_and_render_as_json(ex)
     Rails.logger.warn ex.message

@@ -1,0 +1,5 @@
+.personal_data
+  = "Oops! Looks like you have no #{params[:personal_data_type]} listed in your Facebook profile"
+:coffeescript
+  $ ->
+    window.Cs.fb_share_widget.onload_no_self_data();

@@ -52,12 +52,15 @@ $ ->
       self = this
       json_message = $.parseJSON($('.template').text())
       params = { link: json_message.link }
-      if json_message.compId
-        params['compId'] = json_message.compId
+      if json_message.personal_dataId
+        params['personal_dataId'] = json_message.personal_dataId
+      if json_message.personal_data_type
+        params['personal_data_type'] = json_message.personal_data_type
       @collection.fetch({ data: $.param(params) }).complete ->
+        FB.init({appId: json_message.appId, cookie: true })
         self.render()
 
-    render: =>
+    render: () =>
       this.$el.html(HandlebarsTemplates['facebook_share_widget/templates/all_friends']())
       filteredFriends = @collection.filterBy(@nameSearch.searchFilter())
       @appendFriend friend for friend in filteredFriends

@@ -1,0 +1,9 @@
+= hidden_field_tag 'personal_data_type', params[:personal_data_type]
+%table
+  - @personal_data_results.each do |personal_data|
+    - personal_data_id = personal_data["id"]
+    %tr
+      %td{width: '25px'}
+        = radio_button_tag 'personal_dataId', personal_data_id
+      %td
+        = label_tag "personal_dataId_#{personal_data_id}", personal_data["name"]

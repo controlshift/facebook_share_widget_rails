@@ -49,10 +49,10 @@ describe FacebookShareWidget::FacebookHelper do
       
       it "should get the friends" do
         raw_friends = [OpenStruct.new({ identifier: "1", name: "name" })]        
-        subject.should_receive(:facebook_friends).with(anything()).and_return(raw_friends)
+        subject.should_receive(:facebook_friends).with(anything(), anything()).and_return(raw_friends)
         subject.should_receive(:append_shares_loaded).with(raw_friends, 'http://www.google.com/').and_return(raw_friends)
         
-        subject.facebook_friends_for_link('http://www.google.com/',123)
+        subject.facebook_friends_for_link('http://www.google.com/',123,123)
       end
       
       it "should append the status" do
@@ -91,7 +91,7 @@ describe FacebookShareWidget::FacebookHelper do
         me.stub(:friends) { raw_friends }
         subject.stub(:facebook_me) { me }
         
-        subject.facebook_friends(nil).should == {"1" => { id: "1", name: "name" }}
+        subject.facebook_friends(nil, nil).should == {"1" => { id: "1", name: "name" }}
       end
     end
 
@@ -100,19 +100,17 @@ describe FacebookShareWidget::FacebookHelper do
         raw_friends = [{ uid: "1", name: "name" ,work: [{employer: {id: 123}}]}]
         FbGraph::Query.any_instance.stub(:fetch).with(anything()).and_return(raw_friends)
         subject.stub(:facebook_access_token).and_return('test')
-        subject.facebook_friends(123).should == {"1" => { id: "1", name: "name" }}
+        subject.facebook_friends(123,"work.employer").should == {"1" => { id: "1", name: "name" }}
       end
     end
     
-    describe "#my_employers" do
+    describe "#my_personal_data" do
       it "should return back list of my employers" do
-        raw_employers = [OpenStruct.new(employer: { identifier: "1", name: "name" }, position: {id: "123", 
-        name: "Senior Consultant"}, start_date: "2012-03")]
-        fetch = mock
-        fetch.stub(:work) { raw_employers }
-        subject.stub(:facebook_me) { mock(fetch: fetch) }
+        raw_employers = [{ uid: "1", name: "name" , work: [{employer: {id: "123", 
+        name: "Senior Consultant"}, start_date: "2012-03"}] }]
+        FbGraph::Query.any_instance.stub(:fetch).with(anything()).and_return(raw_employers)
         
-        subject.my_employers.should == [{ identifier: "1", name: "name" }]
+        subject.my_personal_data('work.employer').should == [{ id: "123", name: "Senior Consultant" }]
       end
     end
 
@@ -128,8 +126,7 @@ describe FacebookShareWidget::FacebookHelper do
                         { uid: "8", name: "name8" ,work: [{employer: {id: 66, name: "name66"}}]},
                         { uid: "9", name: "name9" ,work: [{employer: {id: 66, name: "name66"}}]}]
         FbGraph::Query.any_instance.stub(:fetch).with(anything()).and_return(raw_friends)
-        subject.stub(:facebook_access_token).and_return('test')
-        subject.friends_employers.size.should == 5
+        subject.fb_friends_personal_data('work.employer').size.should == 5
       end
     end
 

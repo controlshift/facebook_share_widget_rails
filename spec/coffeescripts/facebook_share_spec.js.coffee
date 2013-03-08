@@ -4,12 +4,12 @@ describe "FacebookFriend ", ->
     window.HandlebarsTemplates = {}
     window.HandlebarsTemplates['facebook_share_widget/templates/friend'] = (f) ->
     setFixtures('<div id="sandbox"><div class="loader tick"><img src=""/></div></div>')
-
-
+    window.FB = {};
+    window.FB.ui = ->
+    window.FB.init = ->
+    
   it "should share message to friend", ->
 
-    spyOn($, "ajax").andCallFake (options)->
-      options.success()
     facebookFriend = new app.models.FacebookFriend
     facebookFriendView = new app.views.FacebookFriendView(model: facebookFriend, el: $('#sandbox'))
     facebookFriendView.render()
@@ -19,8 +19,6 @@ describe "FacebookFriend ", ->
     expect(facebookFriend.isShared()).toBe(true)
 
   it "should share message with default callback from window.facebookShareWidget", ->
-    spyOn($, "ajax").andCallFake (options)->
-      options.success()
     @success_callback = (friend) ->
     spyOn(this, 'success_callback')
 
@@ -35,8 +33,6 @@ describe "FacebookFriend ", ->
     expect(@success_callback).toHaveBeenCalledWith(facebookFriend);
 
   it "should share message with callback", ->
-    spyOn($, "ajax").andCallFake (options)->
-      options.success()
     @success_callback = (friend) ->
     spyOn(this, 'success_callback')
 
@@ -48,37 +44,19 @@ describe "FacebookFriend ", ->
 
     expect(@success_callback).toHaveBeenCalledWith(facebookFriend);
 
-  it "should report error", ->
-    spyOn($, "ajax").andCallFake (options)->
-      options.error({responseText: '{"message":"111"}'})
+  it "should call FB.ui function with redirect_uri and proper data", ->
+    window.FB.ui = (data) ->
+      expect(data.method).toEqual('feed')
+      expect(data.to).toEqual(123)
+      expect(data.redirect_uri).toEqual('http://localhost:8888/widget/facebook/share-redirect?facebook_id=123&link=test')
 
-    facebookFriend = new app.models.FacebookFriend
+    facebookFriend = new app.models.FacebookFriend(id: 123)
     facebookFriendView = new app.views.FacebookFriendView(model: facebookFriend, el: $('#sandbox'))
+    spyOn(facebookFriendView,'sharingTemplate').andCallFake ->
+      '{"link":"test"}'
     facebookFriendView.render()
 
     $('.share-button').click()
-
-    expect(facebookFriend.isShareFailed()).toBe(true)
-    expect(facebookFriend.get('reason')).toBe("111")
-
-  it "should share message with callback when error happening", ->
-    spyOn($, "ajax").andCallFake (options)->
-      options.error({responseText: '{"message":"111"}'})
-    @error_callback = (friend) ->
-    spyOn(this, 'error_callback')
-
-    facebookFriend = new app.models.FacebookFriend fail_callback: @error_callback
-    facebookFriendView = new app.views.FacebookFriendView(model: facebookFriend, el: $('#sandbox'))
-    facebookFriendView.render()
-
-    $('.share-button').click()
-
-    expect(@error_callback).toHaveBeenCalledWith(facebookFriend);
-
-
-
-
-
 
 
 

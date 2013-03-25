@@ -17,7 +17,7 @@ function guard {
 }
 
 function jasmine {
-	RAILS_ENV=test bundle exec rake app:jasmine
+	RAILS_ENV=test bundle exec rake app:jasmine:ci
 }
 
 function main {

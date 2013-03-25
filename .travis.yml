@@ -1,5 +1,8 @@
 language: ruby
 rvm:
   - 1.9.3
+env:
+  - DISPLAY=:99.0
+before_install: sh -e /etc/init.d/xvfb start
 # uncomment this line if your project needs to run something other than `rake`:
-script: RAILS_ENV=test bundle exec rake db:migrate && bundle exec rake && export DISPLAY=:99.0 && bundle exec rake app:jasmine:ci ;
+script: RAILS_ENV=test bundle exec rake db:migrate && bundle exec rake && bundle exec rake app:coffee:compile app:coffee:compile_spec app:jasmine:ci ;

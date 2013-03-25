@@ -8,7 +8,7 @@ gemspec
 gem 'rails', '~> 3.2.3'
 gem 'sqlite3'
 gem 'fb_graph'
-
+gem 'debugger', '1.2.0'
 gem 'jquery-rails'
 gem 'haml-rails'
 gem 'sass-rails'

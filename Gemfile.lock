@@ -59,13 +59,13 @@ GEM
       sass (~> 3.1)
     compass-rails (1.0.1)
       compass (~> 0.12.0)
-    debugger (1.1.4)
+    debugger (1.2.0)
       columnize (>= 0.3.1)
       debugger-linecache (~> 1.1.1)
       debugger-ruby_core_source (~> 1.1.3)
-    debugger-linecache (1.1.1)
+    debugger-linecache (1.1.2)
       debugger-ruby_core_source (>= 1.1.1)
-    debugger-ruby_core_source (1.1.3)
+    debugger-ruby_core_source (1.1.9)
     diff-lcs (1.1.3)
     em-websocket (0.3.8)
       addressable (>= 2.1.1)
@@ -209,7 +209,7 @@ PLATFORMS
 DEPENDENCIES
   coffee-rails
   compass-rails
-  debugger
+  debugger (= 1.2.0)
   facebook_share_widget!
   fb_graph
   guard

@@ -48,7 +48,9 @@ describe "FacebookFriend ", ->
     window.FB.ui = (data) ->
       expect(data.method).toEqual('feed')
       expect(data.to).toEqual(123)
-      expect(data.redirect_uri).toEqual('http://localhost:8888/widget/facebook/share-redirect?facebook_id=123&link=test')
+      expect(data.redirect_uri).toMatch("facebook_id=123")
+      expect(data.redirect_uri).toMatch("link=test")
+      expect(data.redirect_uri).toMatch("facebook/share-redirect")
 
     facebookFriend = new app.models.FacebookFriend(id: 123)
     facebookFriendView = new app.views.FacebookFriendView(model: facebookFriend, el: $('#sandbox'))

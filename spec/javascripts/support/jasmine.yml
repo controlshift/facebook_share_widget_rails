@@ -5,9 +5,9 @@ src_files:
   - underscore.js
   - backbone.js
   - compiled/*.js
-  - jasmine-jquery.js
 
 spec_dir: spec/javascripts
 
 spec_files:
   - '**/*_spec.js'
+  - helpers/jasmine-jquery.js

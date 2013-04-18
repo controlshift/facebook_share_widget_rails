@@ -1,11 +1,14 @@
 describe "FacebookFriend ", ->
 
   beforeEach ->
+    $.get = (url, data, callback) ->
+      callback()
     window.HandlebarsTemplates = {}
     window.HandlebarsTemplates['facebook_share_widget/templates/friend'] = (f) ->
     setFixtures('<div id="sandbox"><div class="loader tick"><img src=""/></div></div>')
     window.FB = {};
-    window.FB.ui = ->
+    window.FB.ui = (data, callback) ->
+      callback({post_id: 123})
     window.FB.init = ->
     
   it "should share message to friend", ->
@@ -45,7 +48,7 @@ describe "FacebookFriend ", ->
     expect(@success_callback).toHaveBeenCalledWith(facebookFriend);
 
   it "should call FB.ui function with redirect_uri and proper data", ->
-    window.FB.ui = (data) ->
+    window.FB.ui = (data, callback) ->
       expect(data.method).toEqual('feed')
       expect(data.to).toEqual(123)
       expect(data.redirect_uri).toMatch("facebook_id=123")
@@ -59,6 +62,5 @@ describe "FacebookFriend ", ->
     facebookFriendView.render()
 
     $('.share-button').click()
-
 
 

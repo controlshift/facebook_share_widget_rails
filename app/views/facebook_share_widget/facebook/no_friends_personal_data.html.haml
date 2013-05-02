@@ -1,4 +1,4 @@
-= "Oops! Looks like your friends have not listed any #{params[:personal_data_type]} on their Facebook profile"
+= "Oops! Looks like your friends have not listed any #{params[:personal_data_type].split('$')[1]} on their Facebook profile"
 :coffeescript
   $ ->
     window.Cs.fb_share_widget.onload_no_friends_data();

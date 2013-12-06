@@ -16,6 +16,7 @@ gem 'compass-rails'
 
 group :test do
   gem 'rspec-rails'
+  gem 'shoulda-matchers'
   gem 'jasmine'
   gem 'guard'
   gem 'guard-coffeescript'

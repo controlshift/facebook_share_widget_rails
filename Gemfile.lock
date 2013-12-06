@@ -223,4 +223,5 @@ DEPENDENCIES
   rspec-rails
   sass-rails
   shoulda
+  shoulda-matchers
   sqlite3

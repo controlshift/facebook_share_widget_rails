@@ -1,6 +1,8 @@
+require 'not_logged_in_exception'
 module FacebookShareWidget
   module FacebookHelper
     def facebook_access_token
+      raise ::NotLoggedInException if FacebookShareWidget.client_id.blank? and session[FacebookShareWidget.access_token_session_key].blank?
       if FacebookShareWidget.access_token_session_key && session[FacebookShareWidget.access_token_session_key]
         session[FacebookShareWidget.access_token_session_key]
       else

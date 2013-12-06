@@ -62,6 +62,16 @@ describe FacebookShareWidget::FacebookController do
       get :personal_data, personal_data_type: 'work$employer'
       
       response.should_not be_successful
+      response.body.should == { message: "Error has occured : some error" }.to_json
+    end
+
+    it "should return unauthorized if not logged in" do
+      error = NotLoggedInException.new()
+      controller.should_receive(:my_personal_data).with('work.employer').and_raise(error)
+      
+      get :personal_data, personal_data_type: 'work$employer'
+      
+      response.should_not be_successful
       response.body.should == { message: "You are probably not logged in" }.to_json
     end
 

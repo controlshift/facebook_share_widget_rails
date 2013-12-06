@@ -1,0 +1,3 @@
+class NotLoggedInException < Exception
+
+end

@@ -12,8 +12,10 @@ class FacebookShareWidget::FacebookController < FacebookShareWidget::Application
       if @personal_data_results.empty?
         render :no_personal_data
       end
-    rescue Exception => ex
-      render json: { message: "You are probably not logged in" }, status: :not_found
+    rescue NotLoggedInException => ex
+      render json: { message: "You are probably not logged in" }, status: :unauthorized
+    rescue Exception => global_ex
+      render json: { message: "Error has occured : #{global_ex.message}" }, status: :not_found
     end
   end
 
@@ -23,8 +25,10 @@ class FacebookShareWidget::FacebookController < FacebookShareWidget::Application
       if @personal_data_results.empty?
         render :no_friends_personal_data
       end
-    rescue Exception => ex
-      render json: { message: "You are probably not logged in" }, status: :not_found
+    rescue NotLoggedInException => ex
+      render json: { message: "You are probably not logged in" }, status: :unauthorized
+    rescue Exception => global_ex
+      render json: { message: "Error has occured : #{global_ex.message}" }, status: :not_found
     end
   end
 

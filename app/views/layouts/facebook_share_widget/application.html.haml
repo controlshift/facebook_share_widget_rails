@@ -4,6 +4,7 @@
     %title Facebook Share Widget
     = stylesheet_link_tag "facebook_share_widget/application", media: "all"
     = javascript_include_tag "facebook_share_widget/application"
+    = javascript_include_tag "//connect.facebook.net/#{I18n.locale}/all.js"
     = csrf_meta_tags
     = yield :head
   %body

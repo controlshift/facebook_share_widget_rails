@@ -150,6 +150,7 @@
       left: 80px;
       @include border-radius(5px);
       @include background-image(linear-gradient(#5181c5 20%, #315d9b 100%));
+      background-color: #315d9b;
       border-color: #7b9fd4 #5181c5 #315d9b;
       color: #ffffff;
       text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
@@ -164,6 +165,7 @@
       
       &:hover {
         @include background-image(linear-gradient(#5181c5 5%, #315d9b 60%));
+        background-color: #21498b;
       }
     }
   }

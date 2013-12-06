@@ -21,7 +21,7 @@ module FacebookShareWidget
     def my_personal_data personal_data_type
       Rails.cache.fetch("#{personal_data_type}_of_#{self.facebook_access_token}", :expires_in => 24.hours) do
         data = []
-        FbGraph::Query.new("SELECT #{personal_data_type} FROM user WHERE uid = me()").
+        FbGraph::Query.new("SELECT #{s(personal_data_type)} FROM user WHERE uid = me()").
         fetch(self.facebook_access_token).each do |data_object|
           data += get_data_array_for(personal_data_type, data_object)
         end
@@ -42,7 +42,7 @@ module FacebookShareWidget
     def fb_friends_personal_data personal_data_type
       Rails.cache.fetch("friends_for_#{self.facebook_access_token}_of_#{personal_data_type}", :expires_in => 1.hour) do
         data = Hash.new(0)
-        FbGraph::Query.new("SELECT uid, name, #{personal_data_type} FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me()) AND #{personal_data_type}").
+        FbGraph::Query.new("SELECT uid, name, #{s(personal_data_type)} FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me()) AND #{s(personal_data_type)}").
         fetch(self.facebook_access_token).each do|f|
           data[get_data_array_for(personal_data_type, f, true).first] += 1
         end
@@ -54,7 +54,7 @@ module FacebookShareWidget
       Rails.cache.fetch("friends_for_#{self.facebook_access_token}_for_#{personal_data_type}_as_#{personal_dataId}", :expires_in => 1.hour) do
         friends = {}
         if(personal_dataId != nil)
-          FbGraph::Query.new("SELECT uid, name, #{personal_data_type}.id FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())").
+          FbGraph::Query.new("SELECT uid, name, #{s(personal_data_type)}.id FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())").
           fetch(self.facebook_access_token).each do|f|
             if(get_data_array_for(personal_data_type, f).collect {|a| a[:id]}.include?(personal_dataId))
               friends[f[:uid].to_s] = { id: f[:uid], name: f[:name] }
@@ -85,6 +85,12 @@ module FacebookShareWidget
     
     def message_for post_id
       FbGraph::Post.new(post_id).fetch(:access_token => self.facebook_access_token).message
+    end
+
+    private
+
+    def s(string)
+      ActiveRecord::Base.sanitize(string)
     end
   end
 end

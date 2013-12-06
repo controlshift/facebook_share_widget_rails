@@ -14,7 +14,8 @@ gem 'sass-rails'
 gem 'coffee-rails'
 gem 'compass-rails'
 
-group :development, :test do
+group :test do
+  gem 'rspec-rails'
   gem 'jasmine'
   gem 'guard'
   gem 'guard-coffeescript'

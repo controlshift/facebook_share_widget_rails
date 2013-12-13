@@ -1,4 +1,5 @@
 source "http://rubygems.org"
+source 'https://rails-assets.org'
 
 # Declare your gem's dependencies in facebook_share_widget.gemspec.
 # Bundler will treat runtime dependencies like base dependencies, and
@@ -13,6 +14,10 @@ gem 'haml-rails'
 gem 'sass-rails'
 gem 'coffee-rails'
 gem 'compass-rails'
+
+gem 'rails-assets-underscore', '1.5.2'
+gem 'rails-assets-handlebars', '1.1.2'
+gem 'rails-assets-backbone', '1.1.0'
 
 group :test do
   gem 'rspec-rails'

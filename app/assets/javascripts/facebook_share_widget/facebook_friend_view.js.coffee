@@ -1,6 +1,6 @@
 #= require underscore.js
 #= require backbone.js
-#= require handlebars-runtime.js
+#= require handlebars.js
 
 $ ->
   class FacebookFriendView extends Backbone.View

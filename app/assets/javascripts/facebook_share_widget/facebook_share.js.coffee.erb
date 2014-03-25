@@ -1,6 +1,6 @@
 #= require underscore.js
 #= require backbone.js
-#= require handlebars-runtime.js
+#= require handlebars.js
 
 $ ->
   class NameSearch extends Backbone.Model
@@ -39,7 +39,7 @@ $ ->
   class FacebookFriendsView extends Backbone.View
     initialize: ->
       @loading()
-      
+
       @nameSearch = new NameSearch
       @nameSearch.on('change', @render, this)
       @nameSearchView = new NameSearchView(el: $('.name-search'), model: @nameSearch)

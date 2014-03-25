@@ -1,6 +1,6 @@
 #= require underscore.js
 #= require backbone.js
-#= require handlebars-runtime.js
+#= require handlebars.js
 
 $ ->
   class FacebookFriend extends Backbone.Model
@@ -35,13 +35,13 @@ $ ->
       data = $.extend({}, $.parseJSON(template))
       data.facebook_id = @id
       redirect_uri = window.location.protocol + '//' + window.location.host + '/widget/facebook/share-redirect?facebook_id='+data.facebook_id+'&link='+data.link
-      
+
       FB.ui { method: 'feed', link: data.link, redirect_uri: redirect_uri, to: data.facebook_id }, (response)->
         if response && response.post_id
           $.get redirect_uri, post_id: response.post_id, ->
             friend.shared()
             friend.success_callback(friend)
-      
+
     setMessageModel: (model) ->
       @messageModel = model
 

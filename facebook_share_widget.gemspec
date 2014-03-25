@@ -18,6 +18,9 @@ Gem::Specification.new do |s|
   s.add_dependency "sass-rails"
   s.add_dependency "coffee-rails"
   s.add_dependency "compass-rails"
+  s.add_dependency 'rails-assets-underscore', '1.5.2'
+  s.add_dependency 'rails-assets-handlebars', '1.1.2'
+  s.add_dependency 'rails-assets-backbone', '1.1.0'
 
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'rspec-rails'

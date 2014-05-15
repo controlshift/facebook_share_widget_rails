@@ -14,8 +14,6 @@ class FacebookShareWidget::FacebookController < FacebookShareWidget::Application
       end
     rescue NotLoggedInException => ex
       render json: { message: "You are probably not logged in" }, status: :unauthorized
-    rescue Exception => global_ex
-      render json: { message: "Error has occured : #{global_ex.message}" }, status: :not_found
     end
   end
 
@@ -27,8 +25,6 @@ class FacebookShareWidget::FacebookController < FacebookShareWidget::Application
       end
     rescue NotLoggedInException => ex
       render json: { message: "You are probably not logged in" }, status: :unauthorized
-    rescue Exception => global_ex
-      render json: { message: "Error has occured : #{global_ex.message}" }, status: :not_found
     end
   end
 

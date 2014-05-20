@@ -14,6 +14,7 @@ gem 'haml-rails'
 gem 'sass-rails'
 gem 'coffee-rails'
 gem 'compass-rails'
+gem 'sidekiq'
 
 gem 'rails-assets-underscore', '1.5.2'
 gem 'rails-assets-handlebars', '1.1.2'

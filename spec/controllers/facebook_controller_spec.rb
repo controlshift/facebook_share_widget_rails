@@ -54,16 +54,6 @@ describe FacebookShareWidget::FacebookController do
       response.should render_template "facebook_share_widget/facebook/personal_data"
       assigns(:personal_data_results).to_json.should == employers.to_json
     end
-    
-    it "should return error message on fail" do
-      error = Exception.new("some error")
-      controller.should_receive(:my_personal_data).with('work.employer').and_raise(error)
-      
-      get :personal_data, personal_data_type: 'work$employer'
-      
-      response.should_not be_successful
-      response.body.should == { message: "Error has occured : some error" }.to_json
-    end
 
     it "should return unauthorized if not logged in" do
       error = NotLoggedInException.new()

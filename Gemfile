@@ -29,5 +29,5 @@ group :test do
 end
 
 group :development do
-  gem 'debugger', '1.2.0'
+  gem 'debugger'
 end

@@ -89,8 +89,8 @@ describe FacebookShareWidget::FacebookHelper do
         raw_friends = [OpenStruct.new({ identifier: "1", name: "name" })]
         me = mock
         me.stub(:friends) { raw_friends }
-        subject.stub(:facebook_me) { me }
-        
+        FacebookShareWidget::Friends.any_instance.stub(:facebook_me) { me }
+
         subject.facebook_friends(nil, nil).should == {"1" => { id: "1", name: "name" }}
       end
     end

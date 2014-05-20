@@ -11,7 +11,6 @@ namespace :coffee do
       dist.close
     end
   end
-    
 
   task :compile_spec => :clean_spec do
     src_dir = "#{Rails.root}/../../spec/coffeescripts"

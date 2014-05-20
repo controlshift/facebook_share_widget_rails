@@ -20,54 +20,21 @@ module FacebookShareWidget
       FbGraph::User.new(facebook_id, access_token: self.facebook_access_token)
     end
   
-    def my_personal_data personal_data_type
+    def my_personal_data(personal_data_type)
       Rails.cache.fetch("#{personal_data_type}_of_#{self.facebook_access_token}", :expires_in => 24.hours) do
-        data = []
-        FbGraph::Query.new("SELECT #{sanitize_personal_data_type(personal_data_type)} FROM user WHERE uid = me()").
-        fetch(access_token: self.facebook_access_token).each do |data_object|
-          data += get_data_array_for(personal_data_type, data_object)
-        end
-        data
+        FacebookShareWidget::PersonalData.new(facebook_access_token: self.facebook_access_token, personal_data_type: personal_data_type).retrieve
       end
-    end
-    
-    def get_data_array_for personal_data_type, data_object, first=false
-      tokens = personal_data_type.split('.').collect(&:to_sym)
-      iteratable_value = data_object[tokens.delete(tokens[0])]
-      iteratable_value = [iteratable_value[0]] if first
-      tokens.each do |token|
-        iteratable_value = iteratable_value.collect {|a| a[token]}
-      end
-      iteratable_value
     end
 
-    def fb_friends_personal_data personal_data_type
+    def fb_friends_personal_data(personal_data_type)
       Rails.cache.fetch("friends_for_#{self.facebook_access_token}_of_#{personal_data_type}", :expires_in => 1.hour) do
-        data = Hash.new(0)
-        FbGraph::Query.new("SELECT uid, name, #{sanitize_personal_data_type(personal_data_type)} FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me()) AND #{sanitize_personal_data_type(personal_data_type)}").
-        fetch(access_token: self.facebook_access_token).each do|f|
-          data[get_data_array_for(personal_data_type, f, true).first] += 1
-        end
-        Hash[data.sort {|a,b| b[1]<=>a[1]}].keys[0..4]
+        FacebookShareWidget::FriendsPersonalData.new(facebook_access_token: self.facebook_access_token, personal_data_type: personal_data_type).retrieve
       end
     end
 
-    def facebook_friends(personal_dataId, personal_data_type)
-      Rails.cache.fetch("friends_for_#{self.facebook_access_token}_for_#{personal_data_type}_as_#{personal_dataId}", :expires_in => 1.hour) do
-        friends = {}
-        if(personal_dataId != nil)
-          FbGraph::Query.new("SELECT uid, name, #{sanitize_personal_data_type(personal_data_type)}.id FROM user WHERE uid IN (SELECT uid2 FROM friend WHERE uid1=me())").
-          fetch(access_token: self.facebook_access_token).each do|f|
-            if(get_data_array_for(personal_data_type, f).collect {|a| a[:id]}.include?(personal_dataId))
-              friends[f[:uid].to_s] = { id: f[:uid], name: f[:name] }
-            end
-          end
-        else
-          facebook_me.friends.each do|f|
-            friends[f.identifier] = { id: f.identifier, name: f.name }
-          end
-        end
-        friends
+    def facebook_friends(personal_data_id, personal_data_type)
+      Rails.cache.fetch("friends_for_#{self.facebook_access_token}_for_#{personal_data_type}_as_#{personal_data_id}", :expires_in => 1.hour) do
+        FacebookShareWidget::Friends.new(facebook_access_token: self.facebook_access_token, personal_data_type: personal_data_type, personal_data_id: personal_data_id).retrieve
       end
     end
     
@@ -87,19 +54,6 @@ module FacebookShareWidget
     
     def message_for post_id
       FbGraph::Post.new(post_id).fetch(:access_token => self.facebook_access_token).message
-    end
-
-    private
-    def sanitize_personal_data_type(s)
-      if ['work.employer'].include?(s)
-        s
-      else
-        nil
-      end
-    end
-
-    def s(string)
-      ActiveRecord::Base.sanitize(string)
     end
   end
 end

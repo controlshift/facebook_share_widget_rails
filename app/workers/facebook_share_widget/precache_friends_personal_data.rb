@@ -8,7 +8,7 @@ module FacebookShareWidget
         FacebookShareWidget::FriendsPersonalData.new(facebook_access_token: facebook_access_token, personal_data_type: personal_data_type).retrieve
       end
 
-      results.each_with_index do |personal_data|
+      results.each do |personal_data|
         PrecacheFriendsWithPersonalDataId.perform_async(facebook_access_token, personal_data_type, personal_data['id'])
       end
 

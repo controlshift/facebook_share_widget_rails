@@ -21,9 +21,13 @@ module FacebookShareWidget
     end
   
     def my_personal_data(personal_data_type)
-      Rails.cache.fetch("#{personal_data_type}_of_#{self.facebook_access_token}", :expires_in => 24.hours) do
+      results = Rails.cache.fetch("#{personal_data_type}_of_#{self.facebook_access_token}", :expires_in => 24.hours) do
         PrecacheFriendsPersonalData.perform_async(self.facebook_access_token, personal_data_type)
         FacebookShareWidget::PersonalData.new(facebook_access_token: self.facebook_access_token, personal_data_type: personal_data_type).retrieve
+      end
+
+      results.each do |personal_data|
+        PrecacheFriendsWithPersonalDataId.perform_async(self.facebook_access_token, personal_data_type, personal_data['id'])
       end
     end
 

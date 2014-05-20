@@ -31,7 +31,3 @@ end
 group :development do
   gem 'debugger'
 end
-
-group :test, :development do
-  gem 'jasmine-rails'
-end

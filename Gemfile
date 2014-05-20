@@ -6,7 +6,7 @@ source 'https://rails-assets.org'
 # development dependencies will be added by default to the :development group.
 gemspec
 
-gem 'rails', '~> 3.2.18'
+gem 'rails', '3.2.6'
 gem 'sqlite3'
 gem 'fb_graph'
 gem 'jquery-rails'

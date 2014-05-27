@@ -13,11 +13,9 @@ module FacebookShareWidget
     end
   
     def facebook_me
-      FbGraph::User.me(self.facebook_access_token)
-    end
-  
-    def facebook_user(facebook_id)
-      FbGraph::User.new(facebook_id, access_token: self.facebook_access_token)
+      Rails.catch.fetch("facebook_me_#{self.facebook_access_token}", expires_in: 24.hours) do
+        FbGraph::User.me(self.facebook_access_token)
+      end
     end
   
     def my_personal_data(personal_data_type)

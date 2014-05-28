@@ -76,7 +76,7 @@ $ ->
       friendView = new app.views.FacebookFriendView(model: friend)
       @$('#friends').append(friendView.render().el)
 
-  if $('#container').length
-    f = new FacebookFriendsView(el: $('#container'))
+  if $('#facebook-share-widget-container').length
+    f = new FacebookFriendsView(el: $('#facebook-share-widget-container'))
     window.delayed_load = f.load
     setTimeout(window.delayed_load, 100)

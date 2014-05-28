@@ -57,8 +57,11 @@ $ ->
       if json_message.personal_data_type
         params['personal_data_type'] = json_message.personal_data_type
       @collection.fetch({ data: $.param(params) }).complete ->
+        console.log 'friend fetch complete'
         FB.init({appId: json_message.appId, cookie: true })
         self.render()
+        console.log 'render complete'
+
 
     render: () =>
       this.$el.html(HandlebarsTemplates['facebook_share_widget/templates/all_friends']())
@@ -78,5 +81,6 @@ $ ->
 
   if $('#facebook-share-widget-container').length
     f = new FacebookFriendsView(el: $('#facebook-share-widget-container'))
+    console.log 'start loading, but delayed'
     window.delayed_load = f.load
     setTimeout(window.delayed_load, 100)

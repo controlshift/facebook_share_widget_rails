@@ -13,6 +13,10 @@ end
 
 describe FacebookShareWidget::FacebookHelper do
   subject { DummyController.new }
+
+  before(:each) do
+    Rails.cache.clear
+  end
   
   describe "#facebook_access_token" do
     it "should use client id and client secret to get token" do
@@ -75,14 +79,7 @@ describe FacebookShareWidget::FacebookHelper do
         subject.facebook_me.should == me
       end
     end
-    
-    describe "#facebook_user" do
-      it "should get facebook user object" do
-        user = mock
-        FbGraph::User.stub(:new).with("12345", access_token: @token) { user }
-        subject.facebook_user("12345").should == user
-      end
-    end
+
     
     describe "#facebook_friends" do
       it "should get facebook friend list" do

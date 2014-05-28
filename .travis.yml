@@ -5,7 +5,7 @@ bundler_args: --without development
 env:
   - DISPLAY=:99.0
 before_install: sh -e /etc/init.d/xvfb start
-before_script: mkdir -p tmp/cache/
+before_script: mkdir -p spec/dummy/tmp/cache/
 # uncomment this line if your project needs to run something other than `rake`:
 script: RAILS_ENV=test bundle exec rake db:migrate && bundle exec rake 
 #&& bundle exec rake app:coffee:compile app:coffee:compile_spec app:jasmine:ci ;

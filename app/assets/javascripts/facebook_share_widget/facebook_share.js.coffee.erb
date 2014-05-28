@@ -63,7 +63,10 @@ $ ->
     render: () =>
       this.$el.html(HandlebarsTemplates['facebook_share_widget/templates/all_friends']())
       filteredFriends = @collection.filterBy(@nameSearch.searchFilter())
-      @appendFriend friend for friend in filteredFriends
+      if filteredFriends.length > 0
+        @appendFriend friend for friend in filteredFriends
+      else
+        @$('#friends').html('No matching friends for employer.')
 
     loading: =>
       this.$el.html(HandlebarsTemplates['facebook_share_widget/templates/all_friends']())

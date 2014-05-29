@@ -57,21 +57,21 @@ $ ->
       if json_message.personal_data_type
         params['personal_data_type'] = json_message.personal_data_type
       @collection.fetch({ data: $.param(params) }).complete ->
-        console.log 'friend fetch complete'
+        console.log('friend fetch complete')
         FB.init({appId: json_message.appId, cookie: true })
         self.render()
-        console.log 'render complete'
+        console.log('render complete')
 
 
     render: () =>
       this.$el.html(HandlebarsTemplates['facebook_share_widget/templates/all_friends']())
-      console.log 'filtering friends'
+      console.log('filtering friends')
       filteredFriends = @collection.filterBy(@nameSearch.searchFilter())
       if filteredFriends.length > 0
-        console.log 'append friends to filtered set'
+        console.log('append friends to filtered set')
         @appendFriend friend for friend in filteredFriends
       else
-        console.log 'no matches for friends filter'
+        console.log('no matches for friends filter')
         @$('#friends').html('No matching friends for employer.')
 
     loading: =>
@@ -84,6 +84,6 @@ $ ->
 
   if $('#facebook-share-widget-container').length
     f = new FacebookFriendsView(el: $('#facebook-share-widget-container'))
-    console.log 'start loading, but delayed'
+    console.log('start loading, but delayed')
     window.delayed_load = f.load
     setTimeout(window.delayed_load, 100)

@@ -79,6 +79,7 @@ $ ->
       this.$el.children('#friends').append("<img src='<%= asset_path("facebook_share_widget/loader.gif") %>'/>")
 
     appendFriend: (friend) ->
+      console.log('friend ' + JSON.stringify(friend))
       friendView = new app.views.FacebookFriendView(model: friend)
       @$('#friends').append(friendView.render().el)
 

@@ -65,8 +65,10 @@ $ ->
 
     render: () =>
       this.$el.html(HandlebarsTemplates['facebook_share_widget/templates/all_friends']())
+      console.log('list has ' + @collection.length + ' friends before filtering')
       console.log('filtering friends')
       filteredFriends = @collection.filterBy(@nameSearch.searchFilter())
+      console.log('list has ' + filteredFriends.length + ' friends after filtering')
       if filteredFriends.length > 0
         console.log('append friends to filtered set')
         @appendFriend friend for friend in filteredFriends
